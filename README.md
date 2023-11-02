@@ -1,2 +1,2 @@
 # protect-the-vaccine
-This is my final project for Honors CISC 108
+Jason Domingo: jayprdom@udel.edu
