@@ -11,8 +11,8 @@ the player wins.
 
 ### Phase 1
 - [ ] <b>Create Game</b>: Create the square grid where the game takes place
-- [ ] <b>Scientist Exists</b>: There is a scientist on screen
-- [ ] <b>Scientist Moves</b>: move up, down, left, and right when the user presses 'W', 'S', 'A', and 'D' respectively
+- [x] <b>Scientist Exists</b>: There is a scientist on screen
+- [x] <b>Scientist Moves</b>: move up, down, left, and right when the user presses 'W', 'S', 'A', and 'D' respectively
 - [ ] <b>Laser</b>: When the user hits the space bar, a laser comes out
 - [ ] <b>Limit Screen</b>: Zombies & scientist cannot walk offscreen
 - [ ] <b>Zombie Appears</b>: There is a zombie that spawn randomly from all 4 sides of the screen
