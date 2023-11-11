@@ -10,6 +10,7 @@ in difficulty: faster, stronger, and special abilities. When the timer runs out 
 the player wins.
 
 ### Phase 1
+#### YOUTUBE LINK: https://youtu.be/2cLohY3uw3Y
 - [x] <b>Create Game</b>: Create the square grid where the game takes place
 - [x] <b>Scientist Exists</b>: There is a scientist on screen
 - [x] <b>Scientist Moves</b>: move up, down, left, and right when the user presses 'W', 'S', 'A', and 'D' respectively
