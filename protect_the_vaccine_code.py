@@ -8,6 +8,7 @@ Image sources:
 
 from designer import *
 from dataclasses import dataclass
+from random import randint
 
 set_window_color("silver")
 
@@ -32,12 +33,14 @@ class World:
     scientist_speed: int
     keys: Keys
     lasers: list[DesignerObject]
+    zombies: list[DesignerObject]
 
 
 def create_world() -> World:
     """ Create the world"""          
     return World(create_scientist(), 10,
-                 Keys(False, False, False, False), [])
+                 Keys(False, False, False, False),
+                 [], [])
 
 
 def create_scientist() -> DesignerObject:
@@ -147,6 +150,24 @@ def destroy_laser(world: World):
     world.lasers = kept
 
 
+def create_zombie(x_cord: int, y_cord: int) -> DesignerObject:
+    """ Creates the zombie """
+    zombie = emoji("zombie", x_cord, y_cord)
+    return zombie
+
+
+def spawn_zombies(world: World):
+    spawn_point = randint(0, 250)
+    if spawn_point == 0:
+        world.zombies.append(create_zombie(get_width()/2, get_height()))
+    elif spawn_point == 1:
+        world.zombies.append(create_zombie(get_width(), get_height()/2))
+    elif spawn_point == 2:
+        world.zombies.append(create_zombie(get_width()/2, 0))
+    elif spawn_point == 3:
+        world.zombies.append(create_zombie(0, get_height()/2))
+
+
 when("starting", create_world)
 when("typing", press_key)
 when("done typing", release_key)
@@ -155,4 +176,5 @@ when("typing", shoot_laser)
 when("updating", shooting_direction)
 when("updating", destroy_laser)
 when("updating", check_boundaries)
+when("updating", spawn_zombies)
 start()

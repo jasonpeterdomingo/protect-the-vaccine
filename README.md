@@ -13,16 +13,17 @@ the player wins.
 - [x] <b>Create Game</b>: Create the square grid where the game takes place
 - [x] <b>Scientist Exists</b>: There is a scientist on screen
 - [x] <b>Scientist Moves</b>: move up, down, left, and right when the user presses 'W', 'S', 'A', and 'D' respectively
-- [x] <b>Laser</b>: When the user hits the space bar, a laser comes out
-- [ ] <b>Limit Screen</b>: Zombies & scientist cannot walk offscreen
-- [ ] <b>Zombie Appears</b>: There is a zombie that spawn randomly from all 4 sides of the screen
+- [x] <b>Laser</b>: When the user hits the space bar, a laser comes out. Laser disappears when it hits offscreen
+- [x] <b>Limit Screen</b>: Scientist cannot walk offscreen
+- [x] <b>Zombie Appears</b>: There is a zombie that spawn randomly from all 4 sides of the screen
 
 ### Phase 2
+- [ ] <b>Laser Direction</b>: Laser shoots the direction the scientist faces
 - [ ] <b>Create Vaccine</b>: Create the vaccine in the middle of the screen
 - [ ] <b>Zombie Follows</b>: The zombies follow the scientist or the vaccine (whichever is closer)
 - [ ] <b>Zombie Disappears</b>: The zombies disappear when they are hit by the laser
 - [ ] <b>Game Pauses</b>: If the zombie touches the scientist or the vaccine, the game pauses
-- [ ] <b>Laser Disappears</b>: Laser disappears when it goes offscreen or hits a zombie
+- [ ] <b>Laser Disappears</b>: Laser disappears when it hits a zombie
 - [ ] Make it so that the scientist cannot walk over the vaccine
 
 ### Phase 3
