@@ -9,6 +9,8 @@ Image sources:
 from designer import *
 from dataclasses import dataclass
 
+set_window_color("silver")
+
 
 @dataclass
 class Keys:
@@ -29,12 +31,13 @@ class World:
     scientist: DesignerObject
     scientist_speed: int
     keys: Keys
+    lasers: list[DesignerObject]
 
 
 def create_world() -> World:
-    """ Create the world"""
+    """ Create the world"""          
     return World(create_scientist(), 10,
-                 Keys(False, False, False, False))
+                 Keys(False, False, False, False), [])
 
 
 def create_scientist() -> DesignerObject:
@@ -90,6 +93,7 @@ def release_key(key: str, world: World):
 
 
 def control_scientist(world: World):
+    """ Checks which key is pressed (True) and moves the character in the respected direction until False"""
     if world.keys.key_w:
         move_up(world)
     elif world.keys.key_s:
@@ -100,8 +104,47 @@ def control_scientist(world: World):
         move_right(world)
 
 
+#def check_boundaries(world: World):
+   # """ Prevents the scientist from walking offscreen"""
+    #if world.scientist.x > get_width():
+
+
+def create_laser() -> DesignerObject:
+    """Create the laser"""
+    return circle("red", 10)
+
+
+def shoot_laser(world: World, key: str):
+    """ Laser is shot"""
+    if key == "space":
+        if len(world.lasers) < 10:
+            new_laser = create_laser()
+            world.lasers.append(new_laser)
+
+
+def shooting_direction(world: World):
+    """ Have the laser move like a projectile"""
+    LASER_SPEED = 5
+    for laser in world.lasers:
+        laser.x += LASER_SPEED
+
+
+def destroy_laser(world: World):
+    """ Destroy the laser that hits offscreen"""
+    kept = []
+    for laser in world.lasers:
+        if laser.x < get_width(): # Need to add for y-direction
+            kept.append(laser)
+        else:
+            destroy(laser)
+    world.lasers = kept
+
+
 when("starting", create_world)
 when("typing", press_key)
 when("done typing", release_key)
 when("updating", control_scientist)
+when("typing", shoot_laser)
+when("updating", shooting_direction)
+when("updating", destroy_laser)
 start()
