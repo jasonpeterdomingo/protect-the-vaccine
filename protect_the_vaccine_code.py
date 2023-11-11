@@ -72,11 +72,11 @@ def press_key(key: str, world: World):
     """ When a key is pressed, the respected Boolean is activated """
     if key == "w":
         world.keys.key_w = True
-    elif key == "s":
+    if key == "s":
         world.keys.key_s = True
-    elif key == "a":
+    if key == "a":
         world.keys.key_a = True
-    elif key == "d":
+    if key == "d":
         world.keys.key_d = True
 
 
@@ -84,11 +84,11 @@ def release_key(key: str, world: World):
     """ When a key is released, the respected Boolean is deactivated"""
     if key == "w":
         world.keys.key_w = False
-    elif key == "s":
+    if key == "s":
         world.keys.key_s = False
-    elif key == "a":
+    if key == "a":
         world.keys.key_a = False
-    elif key == "d":
+    if key == "d":
         world.keys.key_d = False
 
 
@@ -96,17 +96,24 @@ def control_scientist(world: World):
     """ Checks which key is pressed (True) and moves the character in the respected direction until False"""
     if world.keys.key_w:
         move_up(world)
-    elif world.keys.key_s:
+    if world.keys.key_s:
         move_down(world)
-    elif world.keys.key_a:
+    if world.keys.key_a:
         move_left(world)
-    elif world.keys.key_d:
+    if world.keys.key_d:
         move_right(world)
 
 
-#def check_boundaries(world: World):
-   # """ Prevents the scientist from walking offscreen"""
-    #if world.scientist.x > get_width():
+def check_boundaries(world: World):
+    """Prevents the scientist from walking offscreen"""
+    if world.scientist.x > get_width():
+        move_left(world)
+    elif world.scientist.x < 0:
+        move_right(world)
+    if world.scientist.y > get_height():
+        move_up(world)
+    elif world.scientist.y < 0:
+        move_down(world)
 
 
 def create_laser() -> DesignerObject:
@@ -147,4 +154,5 @@ when("updating", control_scientist)
 when("typing", shoot_laser)
 when("updating", shooting_direction)
 when("updating", destroy_laser)
+when("updating", check_boundaries)
 start()
