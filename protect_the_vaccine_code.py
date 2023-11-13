@@ -4,6 +4,7 @@
 
 Image sources:
 - https://creazilla.com/nodes/49809-man-scientist-emoji-clipart
+- https://openclipart.org/detail/265273/male-zombie
 """
 
 from designer import *
@@ -46,6 +47,8 @@ def create_world() -> World:
 def create_scientist() -> DesignerObject:
     """ Create the scientist"""
     scientist = image("images/scientist.png")
+    scientist.scale_x = .5
+    scientist.scale_y = .5
     return scientist
 
 
@@ -152,7 +155,10 @@ def destroy_laser(world: World):
 
 def create_zombie(x_cord: int, y_cord: int) -> DesignerObject:
     """ Creates the zombie """
-    zombie = emoji("zombie", x_cord, y_cord)
+    #zombie = image("images/zombie.png", x_cord, y_cord)
+    zombie = image("images/zombie.png", x_cord, y_cord)
+    zombie.scale_x = .2
+    zombie.scale_y = .2
     return zombie
 
 
