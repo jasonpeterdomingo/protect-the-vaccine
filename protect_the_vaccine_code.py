@@ -26,6 +26,15 @@ class Keys:
 
 
 @dataclass
+class Last_Input:
+    """ This stores the latest gaming keystroke to determine direction laser shoots"""
+    last_key_w: bool
+    last_key_s: bool
+    last_key_a: bool
+    last_key_d: bool
+
+
+@dataclass
 class World:
     """
     Creates all the variables needed to make the game work
@@ -34,6 +43,8 @@ class World:
     scientist_speed: int
     keys: Keys
     lasers: list[DesignerObject]
+    laser_speed: int
+    shooting_direction: Last_Input
     zombies: list[DesignerObject]
 
 
@@ -41,7 +52,10 @@ def create_world() -> World:
     """ Create the world"""          
     return World(create_scientist(), 10,
                  Keys(False, False, False, False),
-                 [], [])
+                 [],
+                 10,
+                 Last_Input(False, False, False, False),
+                 [])
 
 
 def create_scientist() -> DesignerObject:
@@ -78,16 +92,32 @@ def press_key(key: str, world: World):
     """ When a key is pressed, the respected Boolean is activated """
     if key == "w":
         world.keys.key_w = True
+        reset_last_input(world)
+        world.shooting_direction.last_key_w = True
     if key == "s":
         world.keys.key_s = True
+        reset_last_input(world)
+        world.shooting_direction.last_key_s = True
     if key == "a":
         world.keys.key_a = True
+        reset_last_input(world)
+        world.shooting_direction.last_key_a = True
     if key == "d":
         world.keys.key_d = True
+        reset_last_input(world)
+        world.shooting_direction.last_key_d = True
+
+
+def reset_last_input(world: World):
+    """ This resets the last inputs so that the last keystroke can be stored """
+    world.shooting_direction.last_key_w = False
+    world.shooting_direction.last_key_s = False
+    world.shooting_direction.last_key_a = False
+    world.shooting_direction.last_key_d = False
 
 
 def release_key(key: str, world: World):
-    """ When a key is released, the respected Boolean is deactivated"""
+    """ When a key is released, the respected Boolean is deactivated """
     if key == "w":
         world.keys.key_w = False
     if key == "s":
@@ -130,23 +160,36 @@ def create_laser() -> DesignerObject:
 def shoot_laser(world: World, key: str):
     """ Laser is shot"""
     if key == "space":
-        if len(world.lasers) < 10:
+        if len(world.lasers) < 5:
             new_laser = create_laser()
+            laser_position(new_laser, world.scientist)
             world.lasers.append(new_laser)
+
+
+def laser_position(laser_direction: DesignerObject, scientist_direction: DesignerObject):
+    """ Have the laser appear where the scientist is located"""
+    laser_direction.y = scientist_direction.y
+    laser_direction.x = scientist_direction.x + 20
 
 
 def shooting_direction(world: World):
     """ Have the laser move like a projectile"""
-    LASER_SPEED = 5
     for laser in world.lasers:
-        laser.x += LASER_SPEED
+        if world.shooting_direction.last_key_w:
+            laser.y -= world.laser_speed
+        elif world.shooting_direction.last_key_s:
+            laser.y += world.laser_speed
+        elif world.shooting_direction.last_key_a:
+            laser.x -= world.laser_speed
+        elif world.shooting_direction.last_key_d:
+            laser.x += world.laser_speed
 
 
 def destroy_laser(world: World):
     """ Destroy the laser that hits offscreen"""
     kept = []
     for laser in world.lasers:
-        if laser.x < get_width(): # Need to add for y-direction
+        if laser.x < get_width() and laser.x > 0:
             kept.append(laser)
         else:
             destroy(laser)
@@ -155,7 +198,6 @@ def destroy_laser(world: World):
 
 def create_zombie(x_cord: int, y_cord: int) -> DesignerObject:
     """ Creates the zombie """
-    #zombie = image("images/zombie.png", x_cord, y_cord)
     zombie = image("images/zombie.png", x_cord, y_cord)
     zombie.scale_x = .2
     zombie.scale_y = .2
