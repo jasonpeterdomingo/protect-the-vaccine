@@ -173,7 +173,7 @@ def laser_position(laser_direction: DesignerObject, scientist_direction: Designe
 
 
 def shooting_direction(world: World):
-    """ Have the laser move like a projectile"""
+    """ Have the laser shoot in the direction that the scientist shot at"""
     for laser in world.lasers:
         if world.shooting_direction.last_key_w:
             laser.y -= world.laser_speed
@@ -185,11 +185,22 @@ def shooting_direction(world: World):
             laser.x += world.laser_speed
 
 
-def destroy_laser(world: World):
+def destroy_laser_x(world: World):
     """ Destroy the laser that hits offscreen"""
     kept = []
     for laser in world.lasers:
         if laser.x < get_width() and laser.x > 0:
+            kept.append(laser)
+        else:
+            destroy(laser)
+    world.lasers = kept
+
+
+def destroy_laser_y(world: World):
+    """ Destroy the laser that hits offscreen"""
+    kept = []
+    for laser in world.lasers:
+        if laser.y < get_height() and laser.y > 0:
             kept.append(laser)
         else:
             destroy(laser)
@@ -222,7 +233,8 @@ when("done typing", release_key)
 when("updating", control_scientist)
 when("typing", shoot_laser)
 when("updating", shooting_direction)
-when("updating", destroy_laser)
+when("updating", destroy_laser_x)
+when("updating", destroy_laser_y)
 when("updating", check_boundaries)
 when("updating", spawn_zombies)
 start()
