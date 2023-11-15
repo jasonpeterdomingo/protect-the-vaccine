@@ -26,7 +26,7 @@ class Keys:
 
 
 @dataclass
-class Last_Input:
+class LastInput:
     """ This stores the latest gaming keystroke to determine direction laser shoots"""
     last_key_w: bool
     last_key_s: bool
@@ -44,7 +44,7 @@ class World:
     keys: Keys
     lasers: list[DesignerObject]
     laser_speed: int
-    shooting_direction: Last_Input
+    shooting_direction: LastInput
     zombies: list[DesignerObject]
 
 
@@ -54,7 +54,7 @@ def create_world() -> World:
                  Keys(False, False, False, False),
                  [],
                  10,
-                 Last_Input(False, False, False, False),
+                 LastInput(False, False, False, False),
                  [])
 
 
@@ -189,7 +189,7 @@ def destroy_laser_x(world: World):
     """ Destroy the laser that hits offscreen"""
     kept = []
     for laser in world.lasers:
-        if laser.x < get_width() and laser.x > 0:
+        if 0 < laser.x < get_width():
             kept.append(laser)
         else:
             destroy(laser)
@@ -200,7 +200,7 @@ def destroy_laser_y(world: World):
     """ Destroy the laser that hits offscreen"""
     kept = []
     for laser in world.lasers:
-        if laser.y < get_height() and laser.y > 0:
+        if 0 < laser.y < get_height():
             kept.append(laser)
         else:
             destroy(laser)
