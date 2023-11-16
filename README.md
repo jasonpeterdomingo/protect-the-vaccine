@@ -19,7 +19,7 @@ the player wins.
 - [x] <b>Zombie Appears</b>: There is a zombie that spawn randomly from all 4 sides of the screen
 
 ### Phase 2
-- [ ] <b>Laser Direction</b>: Laser shoots the direction the scientist faces
+- [x] <b>Laser Direction</b>: Laser shoots the direction the scientist faces
 - [ ] <b>Create Vaccine</b>: Create the vaccine in the middle of the screen
 - [ ] <b>Zombie Follows</b>: The zombies follow the scientist or the vaccine (whichever is closer)
 - [ ] <b>Zombie Disappears</b>: The zombies disappear when they are hit by the laser

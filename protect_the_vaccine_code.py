@@ -10,7 +10,6 @@ Image sources:
 from designer import *
 from dataclasses import dataclass
 from random import randint
-import math
 
 set_window_color("silver")
 
@@ -48,7 +47,6 @@ class World:
     scientist_speed: int
     keys: Keys
     lasers: list[Laser]
-    #laser_speed: int
     shooting_direction: LastInput
     zombies: list[DesignerObject]
 
