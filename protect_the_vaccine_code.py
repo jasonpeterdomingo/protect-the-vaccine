@@ -158,7 +158,7 @@ def create_laser() -> DesignerObject:
 
 
 def shoot_laser(world: World, key: str):
-    """ Laser is shot"""
+    """ Laser is shot when the user presses the space bar """
     if key == "space":
         if len(world.lasers) < 5:
             new_laser = create_laser()
@@ -216,6 +216,7 @@ def create_zombie(x_cord: int, y_cord: int) -> DesignerObject:
 
 
 def spawn_zombies(world: World):
+    """ Spawns a zombie randomly between 4 different spawn points """
     spawn_point = randint(0, 250)
     if spawn_point == 0:
         world.zombies.append(create_zombie(get_width()/2, get_height()))
