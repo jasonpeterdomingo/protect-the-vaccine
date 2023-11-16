@@ -10,6 +10,7 @@ Image sources:
 from designer import *
 from dataclasses import dataclass
 from random import randint
+import math
 
 set_window_color("silver")
 
@@ -27,23 +28,27 @@ class Keys:
 
 @dataclass
 class LastInput:
-    """ This stores the latest gaming keystroke to determine direction laser shoots"""
+    """ This stores the latest gaming keystroke to determine direction laser shoots """
     last_key_w: bool
     last_key_s: bool
     last_key_a: bool
     last_key_d: bool
 
 
+class Laser(circle):
+    """ Give the laser a speed and direction """
+    speed: int
+    direction: int
+
+
 @dataclass
 class World:
-    """
-    Creates all the variables needed to make the game work
-    """
+    """ Creates all the variables needed to make the game work """
     scientist: DesignerObject
     scientist_speed: int
     keys: Keys
-    lasers: list[DesignerObject]
-    laser_speed: int
+    lasers: list[Laser]
+    #laser_speed: int
     shooting_direction: LastInput
     zombies: list[DesignerObject]
 
@@ -53,7 +58,6 @@ def create_world() -> World:
     return World(create_scientist(), 10,
                  Keys(False, False, False, False),
                  [],
-                 10,
                  LastInput(False, False, False, False),
                  [])
 
@@ -152,9 +156,9 @@ def check_boundaries(world: World):
         move_down(world)
 
 
-def create_laser() -> DesignerObject:
+def create_laser() -> Laser:
     """Create the laser"""
-    return circle("red", 10)
+    return Laser("red", 10, speed=10, direction=0)
 
 
 def shoot_laser(world: World, key: str):
@@ -162,27 +166,29 @@ def shoot_laser(world: World, key: str):
     if key == "space":
         if len(world.lasers) < 5:
             new_laser = create_laser()
-            laser_position(new_laser, world.scientist)
+            laser_position(new_laser, world.scientist, world.shooting_direction)
             world.lasers.append(new_laser)
 
 
-def laser_position(laser_direction: DesignerObject, scientist_direction: DesignerObject):
+def laser_position(laser: Laser, scientist_direction: DesignerObject,
+                   shooting_direction: LastInput):
     """ Have the laser appear where the scientist is located"""
-    laser_direction.y = scientist_direction.y
-    laser_direction.x = scientist_direction.x + 20
+    laser.y = scientist_direction.y
+    laser.x = scientist_direction.x + 30
+    if shooting_direction.last_key_w:
+        laser.direction = 90
+    elif shooting_direction.last_key_s:
+        laser.direction = 270
+    elif shooting_direction.last_key_a:
+        laser.direction = 180
+    elif shooting_direction.last_key_d:
+        laser.direction = 360
 
 
-def shooting_direction(world: World):
-    """ Have the laser shoot in the direction that the scientist shot at"""
+def move_laser(world: World):
+    """ Moves the laser at a constant speed """
     for laser in world.lasers:
-        if world.shooting_direction.last_key_w:
-            laser.y -= world.laser_speed
-        elif world.shooting_direction.last_key_s:
-            laser.y += world.laser_speed
-        elif world.shooting_direction.last_key_a:
-            laser.x -= world.laser_speed
-        elif world.shooting_direction.last_key_d:
-            laser.x += world.laser_speed
+        move_forward(laser, laser.speed, laser.direction)
 
 
 def destroy_laser_x(world: World):
@@ -233,7 +239,7 @@ when("typing", press_key)
 when("done typing", release_key)
 when("updating", control_scientist)
 when("typing", shoot_laser)
-when("updating", shooting_direction)
+when("updating", move_laser)
 when("updating", destroy_laser_x)
 when("updating", destroy_laser_y)
 when("updating", check_boundaries)
