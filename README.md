@@ -20,11 +20,12 @@ the player wins.
 
 ### Phase 2
 - [x] <b>Laser Direction</b>: Laser shoots the direction the scientist faces
+- [x] <b>Zombie Disappears</b>: The zombies disappear when they are hit by the laser
+- [x] <b>Laser Disappears</b>: Laser disappears when it hits a zombie
 - [ ] <b>Create Vaccine</b>: Create the vaccine in the middle of the screen
 - [ ] <b>Zombie Follows</b>: The zombies follow the scientist or the vaccine (whichever is closer)
-- [ ] <b>Zombie Disappears</b>: The zombies disappear when they are hit by the laser
 - [ ] <b>Game Pauses</b>: If the zombie touches the scientist or the vaccine, the game pauses
-- [ ] <b>Laser Disappears</b>: Laser disappears when it hits a zombie
+- [ ] <b>Shoot Lasers Diagonally</b>: When holding multiple keys, bullets can be shot diagonally
 - [ ] Make it so that the scientist cannot walk over the vaccine
 
 ### Phase 3

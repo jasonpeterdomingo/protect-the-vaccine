@@ -178,13 +178,14 @@ def laser_position(laser: Laser, scientist_direction: DesignerObject,
     elif shooting_direction.last_key_s:
         laser.direction = 270
     elif shooting_direction.last_key_a:
+        laser.x = scientist_direction.x - 30
         laser.direction = 180
     elif shooting_direction.last_key_d:
         laser.direction = 360
 
 
 def move_laser(world: World):
-    """ Moves the laser at a constant speed """
+    """ Moves each laser at a constant speed """
     for laser in world.lasers:
         move_forward(laser, laser.speed, laser.direction)
 
@@ -232,6 +233,31 @@ def spawn_zombies(world: World):
         world.zombies.append(create_zombie(0, get_height()/2))
 
 
+def collide_laser_zombie(world: World):
+    """ Checks if the laser and zombie collides and removes them """
+    destroyed_laser = []
+    destroyed_zombie = []
+    for laser in world.lasers:
+        for zombie in world.zombies:
+            if colliding(laser, zombie):
+                destroyed_laser.append(laser)
+                destroyed_zombie.append(zombie)
+    world.lasers = filter_from(world.lasers, destroyed_laser)
+    world.zombies = filter_from(world.zombies, destroyed_zombie)
+
+
+def filter_from(old_list: list[DesignerObject], elements_to_remove: list[DesignerObject]):
+    new_list = []
+    for item in old_list:
+        if item in elements_to_remove:
+            destroy(item)
+        else:
+            new_list.append(item)
+    return new_list
+
+
+
+
 when("starting", create_world)
 when("typing", press_key)
 when("done typing", release_key)
@@ -242,4 +268,5 @@ when("updating", destroy_laser_x)
 when("updating", destroy_laser_y)
 when("updating", check_boundaries)
 when("updating", spawn_zombies)
+when("updating", collide_laser_zombie)
 start()
