@@ -246,7 +246,6 @@ def collide_laser_zombie(world: World):
     world.zombies = filter_from(world.zombies, destroyed_zombie)
 
 
-
 def filter_from(old_list: list[DesignerObject], elements_to_remove: list[DesignerObject]):
     new_list = []
     for item in old_list:
