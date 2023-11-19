@@ -48,6 +48,7 @@ class World:
     lasers: list[Laser]
     shooting_direction: LastInput
     zombies: list[DesignerObject]
+    vaccine: DesignerObject
 
 
 def create_world() -> World:
@@ -56,7 +57,7 @@ def create_world() -> World:
                  Keys(False, False, False, False),
                  [],
                  LastInput(False, False, False, False),
-                 [])
+                 [], create_vaccine())
 
 
 def create_scientist() -> DesignerObject:
@@ -254,6 +255,11 @@ def filter_from(old_list: list[DesignerObject], elements_to_remove: list[Designe
         else:
             new_list.append(item)
     return new_list
+
+
+def create_vaccine() -> DesignerObject:
+    vaccine = image("images/vaccine.png")
+    return vaccine
 
 
 when("starting", create_world)

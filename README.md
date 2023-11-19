@@ -22,7 +22,7 @@ the player wins.
 - [x] <b>Laser Direction</b>: Laser shoots the direction the scientist faces
 - [x] <b>Zombie Disappears</b>: The zombies disappear when they are hit by the laser
 - [x] <b>Laser Disappears</b>: Laser disappears when it hits a zombie
-- [ ] <b>Create Vaccine</b>: Create the vaccine in the middle of the screen
+- [x] <b>Create Vaccine</b>: Create the vaccine in the middle of the screen
 - [ ] <b>Zombie Follows</b>: The zombies follow the scientist or the vaccine (whichever is closer)
 - [ ] <b>Game Pauses</b>: If the zombie touches the scientist or the vaccine, the game pauses
 - [ ] Make it so that the scientist cannot walk over the vaccine
