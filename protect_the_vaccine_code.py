@@ -8,6 +8,8 @@ Image sources:
 - https://iconscout.com/free-icon/vaccine-2332187
 """
 
+# *** Note to self: window is 800 x 600 ***
+
 from designer import *
 from dataclasses import dataclass
 from random import randint
@@ -27,10 +29,10 @@ class Keys:
 @dataclass
 class LastInput:
     """ Stores the latest gaming keystroke to determine direction laser shoots """
-    last_key_w: bool
-    last_key_s: bool
-    last_key_a: bool
-    last_key_d: bool
+    key_w: bool
+    key_s: bool
+    key_a: bool
+    key_d: bool
 
 
 class Laser(circle):
@@ -46,7 +48,7 @@ class World:
     scientist_speed: int
     keys: Keys
     lasers: list[Laser]
-    shooting_direction: LastInput
+    last_keystroke: LastInput
     zombies: list[DesignerObject]
     vaccine: DesignerObject
 
@@ -62,9 +64,9 @@ def create_world() -> World:
 
 def create_scientist() -> DesignerObject:
     """ Create the scientist"""
-    scientist = image("images/scientist.png")
-    scientist.scale_x = .5
-    scientist.scale_y = .5
+    scientist = image("images/scientist.png", 350, 355)
+    scientist.scale_x = .4
+    scientist.scale_y = .4
     return scientist
 
 
@@ -95,27 +97,27 @@ def press_key(key: str, world: World):
     if key == "w":
         world.keys.key_w = True
         reset_last_input(world)
-        world.shooting_direction.last_key_w = True
+        world.last_keystroke.key_w = True
     if key == "s":
         world.keys.key_s = True
         reset_last_input(world)
-        world.shooting_direction.last_key_s = True
+        world.last_keystroke.key_s = True
     if key == "a":
         world.keys.key_a = True
         reset_last_input(world)
-        world.shooting_direction.last_key_a = True
+        world.last_keystroke.key_a = True
     if key == "d":
         world.keys.key_d = True
         reset_last_input(world)
-        world.shooting_direction.last_key_d = True
+        world.last_keystroke.key_d = True
 
 
 def reset_last_input(world: World):
     """ Resets the last input so that the last keystroke can be stored """
-    world.shooting_direction.last_key_w = False
-    world.shooting_direction.last_key_s = False
-    world.shooting_direction.last_key_a = False
-    world.shooting_direction.last_key_d = False
+    world.last_keystroke.key_w = False
+    world.last_keystroke.key_s = False
+    world.last_keystroke.key_a = False
+    world.last_keystroke.key_d = False
 
 
 def release_key(key: str, world: World):
@@ -164,7 +166,7 @@ def shoot_laser(world: World, key: str):
     if key == "space":
         if len(world.lasers) < 5:
             new_laser = create_laser()
-            laser_position(new_laser, world.scientist, world.shooting_direction)
+            laser_position(new_laser, world.scientist, world.last_keystroke)
             world.lasers.append(new_laser)
 
 
@@ -173,14 +175,14 @@ def laser_position(laser: Laser, scientist_direction: DesignerObject,
     """ Have the laser appear where the scientist is located """
     laser.y = scientist_direction.y
     laser.x = scientist_direction.x + 30
-    if shooting_direction.last_key_w:
+    if shooting_direction.key_w:
         laser.direction = 90
-    elif shooting_direction.last_key_s:
+    elif shooting_direction.key_s:
         laser.direction = 270
-    elif shooting_direction.last_key_a:
+    elif shooting_direction.key_a:
         laser.x = scientist_direction.x - 30
         laser.direction = 180
-    elif shooting_direction.last_key_d:
+    elif shooting_direction.key_d:
         laser.direction = 360
 
 
@@ -215,8 +217,8 @@ def destroy_laser_y(world: World):
 def create_zombie(x_cord: int, y_cord: int) -> DesignerObject:
     """ Creates the zombie """
     zombie = image("images/zombie.png", x_cord, y_cord)
-    zombie.scale_x = .2
-    zombie.scale_y = .2
+    zombie.scale_x = .17
+    zombie.scale_y = .17
     return zombie
 
 
@@ -258,8 +260,22 @@ def filter_from(old_list: list[DesignerObject], elements_to_remove: list[Designe
 
 
 def create_vaccine() -> DesignerObject:
+    """ Create the vaccine """
     vaccine = image("images/vaccine.png")
     return vaccine
+
+
+def collide_vaccine_scientist(world: World):
+    """ Prevents the scientist from walking over vaccine """
+    if colliding(world.scientist, world.vaccine):
+        if world.last_keystroke.key_w:
+            move_down(world)
+        elif world.last_keystroke.key_s:
+            move_up(world)
+        elif world.last_keystroke.key_a:
+            move_right(world)
+        elif world.last_keystroke.key_d:
+            move_left(world)
 
 
 when("starting", create_world)
@@ -273,4 +289,5 @@ when("updating", destroy_laser_y)
 when("updating", check_boundaries)
 when("updating", spawn_zombies)
 when("updating", collide_laser_zombie)
+when("updating", collide_vaccine_scientist)
 start()
