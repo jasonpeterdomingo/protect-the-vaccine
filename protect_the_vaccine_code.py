@@ -5,6 +5,7 @@
 Image sources:
 - https://creazilla.com/nodes/49809-man-scientist-emoji-clipart
 - https://openclipart.org/detail/265273/male-zombie
+- https://iconscout.com/free-icon/vaccine-2332187
 """
 
 from designer import *
@@ -16,9 +17,7 @@ set_window_color("silver")
 
 @dataclass
 class Keys:
-    """
-    These are the gaming keys
-    """
+    """ These are the gaming keys """
     key_w: bool
     key_s: bool
     key_a: bool
@@ -27,7 +26,7 @@ class Keys:
 
 @dataclass
 class LastInput:
-    """ This stores the latest gaming keystroke to determine direction laser shoots """
+    """ Stores the latest gaming keystroke to determine direction laser shoots """
     last_key_w: bool
     last_key_s: bool
     last_key_a: bool
@@ -69,29 +68,29 @@ def create_scientist() -> DesignerObject:
 
 
 def move_left(world: World):
-    """ Move the scientist left"""
+    """ Move the scientist left """
     world.scientist.flip_x = True
     world.scientist.x += -world.scientist_speed
 
 
 def move_right(world: World):
-    """ Move the scientist right"""
+    """ Move the scientist right """
     world.scientist.flip_x = False
     world.scientist.x += world.scientist_speed
 
 
 def move_up(world: World):
-    """ Move the scientist up"""
+    """ Move the scientist up """
     world.scientist.y += -world.scientist_speed
 
 
 def move_down(world: World):
-    """ Move the scientist down"""
+    """ Move the scientist down """
     world.scientist.y += world.scientist_speed
 
 
 def press_key(key: str, world: World):
-    """ When a key is pressed, the respected Boolean is activated """
+    """ When a key is pressed, the respected Boolean and the last keystroke is activated"""
     if key == "w":
         world.keys.key_w = True
         reset_last_input(world)
@@ -111,7 +110,7 @@ def press_key(key: str, world: World):
 
 
 def reset_last_input(world: World):
-    """ This resets the last inputs so that the last keystroke can be stored """
+    """ Resets the last input so that the last keystroke can be stored """
     world.shooting_direction.last_key_w = False
     world.shooting_direction.last_key_s = False
     world.shooting_direction.last_key_a = False
@@ -131,7 +130,7 @@ def release_key(key: str, world: World):
 
 
 def control_scientist(world: World):
-    """ Checks which key is pressed (True) and moves the character in the respected direction until False"""
+    """ Checks which key is pressed (True) and moves the character in the respected direction until False """
     if world.keys.key_w:
         move_up(world)
     if world.keys.key_s:
@@ -143,7 +142,7 @@ def control_scientist(world: World):
 
 
 def check_boundaries(world: World):
-    """Prevents the scientist from walking offscreen"""
+    """Prevents the scientist from walking offscreen """
     if world.scientist.x > get_width():
         move_left(world)
     elif world.scientist.x < 0:
@@ -155,7 +154,7 @@ def check_boundaries(world: World):
 
 
 def create_laser() -> Laser:
-    """Create the laser"""
+    """ Create the laser """
     return Laser("red", 10, speed=10, direction=0)
 
 
@@ -170,7 +169,7 @@ def shoot_laser(world: World, key: str):
 
 def laser_position(laser: Laser, scientist_direction: DesignerObject,
                    shooting_direction: LastInput):
-    """ Have the laser appear where the scientist is located"""
+    """ Have the laser appear where the scientist is located """
     laser.y = scientist_direction.y
     laser.x = scientist_direction.x + 30
     if shooting_direction.last_key_w:
@@ -185,13 +184,13 @@ def laser_position(laser: Laser, scientist_direction: DesignerObject,
 
 
 def move_laser(world: World):
-    """ Moves each laser at a constant speed """
+    """ Moves each laser at a constant speed and direction """
     for laser in world.lasers:
         move_forward(laser, laser.speed, laser.direction)
 
 
 def destroy_laser_x(world: World):
-    """ Destroy the laser that hits offscreen"""
+    """ Destroys the laser that hits offscreen in the x-direction """
     kept = []
     for laser in world.lasers:
         if 0 < laser.x < get_width():
@@ -202,7 +201,7 @@ def destroy_laser_x(world: World):
 
 
 def destroy_laser_y(world: World):
-    """ Destroy the laser that hits offscreen"""
+    """ Destroys the laser that hits offscreen in the y-direction """
     kept = []
     for laser in world.lasers:
         if 0 < laser.y < get_height():
@@ -247,6 +246,7 @@ def collide_laser_zombie(world: World):
 
 
 def filter_from(old_list: list[DesignerObject], elements_to_remove: list[DesignerObject]):
+    """ Destroys elements from the old list and returns a new list """
     new_list = []
     for item in old_list:
         if item in elements_to_remove:
@@ -254,8 +254,6 @@ def filter_from(old_list: list[DesignerObject], elements_to_remove: list[Designe
         else:
             new_list.append(item)
     return new_list
-
-
 
 
 when("starting", create_world)
