@@ -316,6 +316,15 @@ def collide_vaccine_scientist(world: World):
             move_left(world)
 
 
+def zombie_collision(world: World):
+    """ Stops the game if a zombie collides with scientist or vaccine """
+    zombie_touches = False
+    for zombie in world.zombies:
+        if colliding(zombie, world.scientist) or colliding(zombie, world.vaccine):
+            zombie_touches = True
+    return zombie_touches
+
+
 when("starting", create_world)
 when("typing", press_key)
 when("done typing", release_key)
@@ -330,4 +339,5 @@ when("updating", collide_laser_zombie)
 when("updating", collide_vaccine_scientist)
 when("updating", zombie_direction)
 when("updating", move_zombie)
+when(zombie_collision, pause)
 start()

@@ -25,10 +25,11 @@ the player wins.
 - [x] <b>Create Vaccine</b>: Create the vaccine in the middle of the screen
 - [x] Make it so that the scientist cannot walk over the vaccine
 - [x] <b>Zombie Moves</b>: The zombies follow the vaccine (need to modify to follow whichever is closer)
-- [ ] <b>Game Pauses</b>: If the zombie touches the scientist or the vaccine, the game pauses
+- [x] <b>Game Pauses</b>: If the zombie touches the scientist or the vaccine, the game pauses
 
 ### Phase 3
 - [ ] <b>Zombie Follows</b>: The zombies follow the scientist or the vaccine (whichever is closer)
+- [ ] <b>Shoot Lasers Diagonally</b>: When holding multiple keys, bullets can be shot diagonally
 - [ ] <b>Item Drop</b>: Create a random chance the zombies will drop a special item (make the player faster, bigger lasers)
 - [ ] <b>Timer</b>: Add the timer
 - [ ] <b>Timer runs out</b>: When timer runs out, a "You Won" screen appears
@@ -36,4 +37,3 @@ the player wins.
 - [ ] <b>Game Over Screen</b>: Add the "Game Over" screen displaying time and score
 - [ ] <b>Display Stats on Screen</b>: Display the score and time left
 - [ ] <b>Scale</b>: As timer runs out, increase difficulty (faster zombies, need to be hit multiple times)
-- [ ] <b>Shoot Lasers Diagonally</b>: When holding multiple keys, bullets can be shot diagonally
