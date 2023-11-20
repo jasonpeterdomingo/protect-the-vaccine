@@ -23,9 +23,9 @@ the player wins.
 - [x] <b>Zombie Disappears</b>: The zombies disappear when they are hit by the laser
 - [x] <b>Laser Disappears</b>: Laser disappears when it hits a zombie
 - [x] <b>Create Vaccine</b>: Create the vaccine in the middle of the screen
+- [x] Make it so that the scientist cannot walk over the vaccine
 - [ ] <b>Zombie Follows</b>: The zombies follow the scientist or the vaccine (whichever is closer)
 - [ ] <b>Game Pauses</b>: If the zombie touches the scientist or the vaccine, the game pauses
-- [x] Make it so that the scientist cannot walk over the vaccine
 
 ### Phase 3
 - [ ] <b>Item Drop</b>: Create a random chance the zombies will drop a special item (make the player faster, bigger lasers)

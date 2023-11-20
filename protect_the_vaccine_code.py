@@ -41,14 +41,21 @@ class Laser(circle):
     direction: int
 
 
+"""
+class Zombie(DesignerObject):
+    speed: int
+"""
+
+
 @dataclass
 class World:
     """ Creates all the variables needed to make the game work """
     scientist: DesignerObject
-    scientist_speed: int
+    object_speed: int
     keys: Keys
     lasers: list[Laser]
     last_keystroke: LastInput
+    #zombies: list[Zombie]
     zombies: list[DesignerObject]
     vaccine: DesignerObject
 
@@ -64,7 +71,7 @@ def create_world() -> World:
 
 def create_scientist() -> DesignerObject:
     """ Create the scientist"""
-    scientist = image("images/scientist.png", 350, 355)
+    scientist = image("images/scientist.png", 350, 300)
     scientist.scale_x = .4
     scientist.scale_y = .4
     return scientist
@@ -73,23 +80,23 @@ def create_scientist() -> DesignerObject:
 def move_left(world: World):
     """ Move the scientist left """
     world.scientist.flip_x = True
-    world.scientist.x += -world.scientist_speed
+    world.scientist.x += -world.object_speed
 
 
 def move_right(world: World):
     """ Move the scientist right """
     world.scientist.flip_x = False
-    world.scientist.x += world.scientist_speed
+    world.scientist.x += world.object_speed
 
 
 def move_up(world: World):
     """ Move the scientist up """
-    world.scientist.y += -world.scientist_speed
+    world.scientist.y += -world.object_speed
 
 
 def move_down(world: World):
     """ Move the scientist down """
-    world.scientist.y += world.scientist_speed
+    world.scientist.y += world.object_speed
 
 
 def press_key(key: str, world: World):
@@ -173,6 +180,7 @@ def shoot_laser(world: World, key: str):
 def laser_position(laser: Laser, scientist_direction: DesignerObject,
                    shooting_direction: LastInput):
     """ Have the laser appear where the scientist is located """
+    # need to add for diagonal shooting
     laser.y = scientist_direction.y
     laser.x = scientist_direction.x + 30
     if shooting_direction.key_w:
@@ -226,13 +234,17 @@ def spawn_zombies(world: World):
     """ Spawns a zombie randomly between 4 different spawn points """
     spawn_point = randint(0, 250)
     if spawn_point == 0:
-        world.zombies.append(create_zombie(get_width()/2, get_height()))
+        new_zombie = create_zombie(get_width()/2, get_height())
+        world.zombies.append(new_zombie)
     elif spawn_point == 1:
-        world.zombies.append(create_zombie(get_width(), get_height()/2))
+        new_zombie = create_zombie(get_width(), get_height() / 2)
+        world.zombies.append(new_zombie)
     elif spawn_point == 2:
-        world.zombies.append(create_zombie(get_width()/2, 0))
+        new_zombie = create_zombie(get_width()/2, 0)
+        world.zombies.append(new_zombie)
     elif spawn_point == 3:
-        world.zombies.append(create_zombie(0, get_height()/2))
+        new_zombie = create_zombie(0, get_height() / 2)
+        world.zombies.append(new_zombie)
 
 
 def collide_laser_zombie(world: World):
@@ -261,12 +273,13 @@ def filter_from(old_list: list[DesignerObject], elements_to_remove: list[Designe
 
 def create_vaccine() -> DesignerObject:
     """ Create the vaccine """
-    vaccine = image("images/vaccine.png")
+    vaccine = image("images/vaccine.png", 420, 300)
     return vaccine
 
 
 def collide_vaccine_scientist(world: World):
     """ Prevents the scientist from walking over vaccine """
+    # fix problem when holding 2 keys (add diagonal features)
     if colliding(world.scientist, world.vaccine):
         if world.last_keystroke.key_w:
             move_down(world)
