@@ -222,7 +222,7 @@ def destroy_laser_y(world: World):
 
 def create_zombie(x_cord: int, y_cord: int) -> Zombie:
     """ Creates the zombie """
-    return Zombie("images/zombie.png", x_cord, y_cord, speed=10)
+    return Zombie("images/zombie.png", x_cord, y_cord, speed=2)
 
 
 def spawn_zombies(world: World):
@@ -260,9 +260,9 @@ def zombie_direction(zombie: Zombie, spawn_point: int):
     if spawn_point == 0:
         zombie.direction = 90
     elif spawn_point == 1:
-        zombie.direction = 270
-    elif spawn_point == 2:
         zombie.direction = 180
+    elif spawn_point == 2:
+        zombie.direction = 270
     elif spawn_point == 3:
         zombie.direction = 360
 
@@ -329,4 +329,5 @@ when("updating", spawn_zombies)
 when("updating", collide_laser_zombie)
 when("updating", collide_vaccine_scientist)
 when("updating", zombie_direction)
+when("updating", move_zombie)
 start()
