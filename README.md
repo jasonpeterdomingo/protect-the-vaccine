@@ -19,6 +19,7 @@ the player wins.
 - [x] <b>Zombie Appears</b>: There is a zombie that spawn randomly from all 4 sides of the screen
 
 ### Phase 2
+#### YOUTUBE LINK: https://youtu.be/mvnHIdMObQ4?si=t1Txsrf769af3cIK
 - [x] <b>Laser Direction</b>: Laser shoots the direction the scientist faces
 - [x] <b>Zombie Disappears</b>: The zombies disappear when they are hit by the laser
 - [x] <b>Laser Disappears</b>: Laser disappears when it hits a zombie
