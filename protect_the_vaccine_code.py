@@ -41,10 +41,9 @@ class Laser(circle):
     direction: int
 
 
-"""
-class Zombie(DesignerObject):
+class Zombie(image):
     speed: int
-"""
+    direction: int
 
 
 @dataclass
@@ -55,8 +54,7 @@ class World:
     keys: Keys
     lasers: list[Laser]
     last_keystroke: LastInput
-    #zombies: list[Zombie]
-    zombies: list[DesignerObject]
+    zombies: list[Zombie]
     vaccine: DesignerObject
 
 
@@ -222,12 +220,9 @@ def destroy_laser_y(world: World):
     world.lasers = kept
 
 
-def create_zombie(x_cord: int, y_cord: int) -> DesignerObject:
+def create_zombie(x_cord: int, y_cord: int) -> Zombie:
     """ Creates the zombie """
-    zombie = image("images/zombie.png", x_cord, y_cord)
-    zombie.scale_x = .17
-    zombie.scale_y = .17
-    return zombie
+    return Zombie("images/zombie.png", x_cord, y_cord, speed=10)
 
 
 def spawn_zombies(world: World):
@@ -235,16 +230,46 @@ def spawn_zombies(world: World):
     spawn_point = randint(0, 250)
     if spawn_point == 0:
         new_zombie = create_zombie(get_width()/2, get_height())
+        new_zombie.scale_x = .17
+        new_zombie.scale_y = .17
+        zombie_direction(new_zombie, 0)
         world.zombies.append(new_zombie)
     elif spawn_point == 1:
-        new_zombie = create_zombie(get_width(), get_height() / 2)
+        new_zombie = create_zombie(get_width(), get_height()/2)
+        new_zombie.scale_x = .17
+        new_zombie.scale_y = .17
+        zombie_direction(new_zombie, 1)
         world.zombies.append(new_zombie)
     elif spawn_point == 2:
         new_zombie = create_zombie(get_width()/2, 0)
+        new_zombie.scale_x = .17
+        new_zombie.scale_y = .17
+        zombie_direction(new_zombie, 2)
         world.zombies.append(new_zombie)
     elif spawn_point == 3:
-        new_zombie = create_zombie(0, get_height() / 2)
+        new_zombie = create_zombie(0, get_height()/2)
+        new_zombie.scale_x = .17
+        new_zombie.scale_y = .17
+        zombie_direction(new_zombie, 3)
         world.zombies.append(new_zombie)
+
+
+def zombie_direction(zombie: Zombie, spawn_point: int):
+    """ Determines the direction the zombie walks """
+    # Tentative solution until figure out how to make zombie follow player
+    if spawn_point == 0:
+        zombie.direction = 90
+    elif spawn_point == 1:
+        zombie.direction = 270
+    elif spawn_point == 2:
+        zombie.direction = 180
+    elif spawn_point == 3:
+        zombie.direction = 360
+
+
+def move_zombie(world: World):
+    for zombie in world.zombies:
+        move_forward(zombie, zombie.speed, zombie.direction)
 
 
 def collide_laser_zombie(world: World):
@@ -303,4 +328,5 @@ when("updating", check_boundaries)
 when("updating", spawn_zombies)
 when("updating", collide_laser_zombie)
 when("updating", collide_vaccine_scientist)
+when("updating", zombie_direction)
 start()
