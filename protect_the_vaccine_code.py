@@ -229,45 +229,44 @@ def spawn_zombies(world: World):
     """ Spawns a zombie randomly between 4 different spawn points """
     spawn_point = randint(0, 250)
     if spawn_point == 0:
-        new_zombie = create_zombie(get_width()/2, get_height())
+        new_zombie = create_zombie(randint(0, 800), get_height())
         new_zombie.scale_x = .17
         new_zombie.scale_y = .17
-        zombie_direction(new_zombie, 0)
         world.zombies.append(new_zombie)
     elif spawn_point == 1:
-        new_zombie = create_zombie(get_width(), get_height()/2)
+        new_zombie = create_zombie(get_width(), randint(0, 600))
         new_zombie.scale_x = .17
         new_zombie.scale_y = .17
-        zombie_direction(new_zombie, 1)
         world.zombies.append(new_zombie)
     elif spawn_point == 2:
-        new_zombie = create_zombie(get_width()/2, 0)
+        new_zombie = create_zombie(randint(0, 800), 0)
         new_zombie.scale_x = .17
         new_zombie.scale_y = .17
-        zombie_direction(new_zombie, 2)
         world.zombies.append(new_zombie)
     elif spawn_point == 3:
-        new_zombie = create_zombie(0, get_height()/2)
+        new_zombie = create_zombie(0, randint(0, 600))
         new_zombie.scale_x = .17
         new_zombie.scale_y = .17
-        zombie_direction(new_zombie, 3)
         world.zombies.append(new_zombie)
 
 
-def zombie_direction(zombie: Zombie, spawn_point: int):
+def zombie_direction(world: World):
     """ Determines the direction the zombie walks """
-    # Tentative solution until figure out how to make zombie follow player
-    if spawn_point == 0:
-        zombie.direction = 90
-    elif spawn_point == 1:
-        zombie.direction = 180
-    elif spawn_point == 2:
-        zombie.direction = 270
-    elif spawn_point == 3:
-        zombie.direction = 360
+    for zombie in world.zombies:
+        if zombie.x > world.scientist.x:
+            zombie.flip_x = True
+            zombie.direction = 180
+        elif zombie.x < world.scientist.x:
+            zombie.flip_x = False
+            zombie.direction = 360
+        if zombie.y > world.scientist.y:
+            zombie.direction = 90
+        elif zombie.y < world.scientist.y:
+            zombie.direction = 270
 
 
 def move_zombie(world: World):
+    """ Move each zombie """
     for zombie in world.zombies:
         move_forward(zombie, zombie.speed, zombie.direction)
 
