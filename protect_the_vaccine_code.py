@@ -6,13 +6,16 @@ Image sources:
 - https://creazilla.com/nodes/49809-man-scientist-emoji-clipart
 - https://openclipart.org/detail/265273/male-zombie
 - https://iconscout.com/free-icon/vaccine-2332187
-"""
 
+Sources (reason for use is explained in the exact line used):
+[1] https://docs.python.org/3/library/math.html
+"""
 # *** Note to self: window is 800 x 600 ***
 
 from designer import *
 from dataclasses import dataclass
 from random import randint
+import math
 
 set_window_color("silver")
 
@@ -43,7 +46,7 @@ class Laser(circle):
 
 class Zombie(image):
     speed: int
-    direction: int
+    direction: float
 
 
 @dataclass
@@ -250,19 +253,33 @@ def spawn_zombies(world: World):
         world.zombies.append(new_zombie)
 
 
-def zombie_direction(world: World):
-    """ Determines the direction the zombie walks """
+def find_closer_entity(world: World):
+    """ Determine who the zombie should follow """
+    # Need to also check y-direction
     for zombie in world.zombies:
-        if zombie.x > world.scientist.x:
-            zombie.flip_x = True
-            zombie.direction = 180
-        elif zombie.x < world.scientist.x:
-            zombie.flip_x = False
-            zombie.direction = 360
-        if zombie.y > world.scientist.y:
-            zombie.direction = 90
-        elif zombie.y < world.scientist.y:
-            zombie.direction = 270
+        if (zombie.x - world.vaccine.x) < (zombie.x - world.scientist.x):
+            zombie_direction(zombie, world.vaccine)
+        elif (zombie.x - world.vaccine.x) > (zombie.x - world.scientist.x):
+            zombie_direction(zombie, world.scientist)
+
+
+def zombie_direction(zombie: Zombie, entity: DesignerObject):
+    """ Change the direction of the zombie to follow the entity """
+    # [1] Finds the arc tangent to determine angle the zombie should follow
+    if zombie.x > entity.x:
+        zombie.flip_x = True
+        # zombie.direction = math.degrees(math.atan2(entity.y - zombie.y, entity.x - zombie.x))
+        zombie.direction = 180
+    elif zombie.x < entity.x:
+        zombie.flip_x = False
+        # zombie.direction = math.degrees(math.atan2(entity.y - zombie.y, entity.x - zombie.x))
+        zombie.direction = 360
+    if zombie.y > entity.y:
+        # zombie.direction = math.degrees(math.atan2(entity.y - zombie.y, entity.x - zombie.x))
+        zombie.direction = 90
+    elif zombie.y < entity.y:
+        # zombie.direction = math.degrees(math.atan2(entity.y - zombie.y, entity.x - zombie.x))
+        zombie.direction = 270
 
 
 def move_zombie(world: World):
@@ -336,7 +353,7 @@ when("updating", check_boundaries)
 when("updating", spawn_zombies)
 when("updating", collide_laser_zombie)
 when("updating", collide_vaccine_scientist)
-when("updating", zombie_direction)
+when("updating", find_closer_entity)
 when("updating", move_zombie)
 when(zombie_collision, pause)
 start()
