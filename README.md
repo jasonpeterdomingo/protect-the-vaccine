@@ -29,7 +29,7 @@ the player wins.
 - [x] <b>Game Pauses</b>: If the zombie touches the scientist or the vaccine, the game pauses
 
 ### Phase 3
-- [ ] <b>Zombie Follows</b>: The zombies follow the scientist or the vaccine (whichever is closer)
+- [x] <b>Zombie Follows</b>: The zombies follow the scientist or the vaccine (whichever is closer)
 - [ ] <b>Shoot Lasers Diagonally</b>: When holding multiple keys, bullets can be shot diagonally
 - [ ] <b>Item Drop</b>: Create a random chance the zombies will drop a special item (make the player faster, bigger lasers)
 - [ ] <b>Timer</b>: Add the timer

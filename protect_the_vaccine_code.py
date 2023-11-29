@@ -180,10 +180,10 @@ def shoot_laser(world: World, key: str):
 
 def laser_position(laser: Laser, scientist_direction: DesignerObject,
                    shooting_direction: LastInput):
-    """ Have the laser appear where the scientist is located """
+    """ Have the laser appear where the scientist is located and shoot based on last input """
     # need to add for diagonal shooting
     laser.y = scientist_direction.y
-    laser.x = scientist_direction.x + 30
+    laser.x = scientist_direction.x
     if shooting_direction.key_w:
         laser.direction = 90
     elif shooting_direction.key_s:
@@ -255,11 +255,12 @@ def spawn_zombies(world: World):
 
 def find_closer_entity(world: World):
     """ Determine who the zombie should follow """
-    # Need to also check y-direction
     for zombie in world.zombies:
-        if (zombie.x - world.vaccine.x) < (zombie.x - world.scientist.x):
+        if ((zombie.x - world.vaccine.x) < (zombie.x - world.scientist.x) or
+                (zombie.y - world.vaccine.y) < (zombie.y - world.scientist.y)):
             zombie_direction(zombie, world.vaccine)
-        elif (zombie.x - world.vaccine.x) > (zombie.x - world.scientist.x):
+        elif ((zombie.x - world.vaccine.x) > (zombie.x - world.scientist.x) or
+              (zombie.y - world.vaccine.y) < (zombie.y - world.scientist.y)):
             zombie_direction(zombie, world.scientist)
 
 
@@ -279,7 +280,7 @@ def zombie_direction(zombie: Zombie, entity: DesignerObject):
 
 def get_angle(entity: DesignerObject, zombie: Zombie):
     """ Gets the angle for the zombie's direction """
-    # [1] atan2 - the arc tangent function to calculate the angle between the x and y coordinate
+    # [1] was used to apply atan2: the arc tangent function to calculate the angle between the x and y coordinate
     rise = entity.y - zombie.y
     run = entity.x - zombie.x
     return math.degrees(math.atan2(-rise, run)) % 360  # Had help from Dr. Bart to fix equation
