@@ -22,7 +22,7 @@ set_window_color("silver")
 
 @dataclass
 class Keys:
-    """ These are the gaming keys """
+    """ These are the keys to move scientist """
     key_w: bool
     key_s: bool
     key_a: bool
@@ -176,12 +176,27 @@ def shoot_laser(world: World, key: str):
             new_laser = create_laser()
             laser_position(new_laser, world.scientist, world.last_keystroke)
             world.lasers.append(new_laser)
+    if key == "q":
+        new_laser = create_laser()
+        diagonal_shot(new_laser, world.scientist, "q")
+        world.lasers.append(new_laser)
+    if key == "e":
+        new_laser = create_laser()
+        diagonal_shot(new_laser, world.scientist, "e")
+        world.lasers.append(new_laser)
+    if key == "z":
+        new_laser = create_laser()
+        diagonal_shot(new_laser, world.scientist, "z")
+        world.lasers.append(new_laser)
+    if key == "x":
+        new_laser = create_laser()
+        diagonal_shot(new_laser, world.scientist, "x")
+        world.lasers.append(new_laser)
 
 
 def laser_position(laser: Laser, scientist_direction: DesignerObject,
                    shooting_direction: LastInput):
     """ Have the laser appear where the scientist is located and shoot based on last input """
-    # need to add for diagonal shooting
     laser.y = scientist_direction.y
     laser.x = scientist_direction.x
     if shooting_direction.key_w:
@@ -193,6 +208,20 @@ def laser_position(laser: Laser, scientist_direction: DesignerObject,
         laser.direction = 180
     elif shooting_direction.key_d:
         laser.direction = 360
+
+
+def diagonal_shot(laser: Laser, scientist_direction: DesignerObject, key_pressed: str):
+    """ Have the laser appear where the scientist is and shoots diagonally based on key pressed """
+    laser.y = scientist_direction.y
+    laser.x = scientist_direction.x
+    if key_pressed == "q":
+        laser.direction = 135
+    elif key_pressed == "e":
+        laser.direction = 45
+    elif key_pressed == "z":
+        laser.direction = 225
+    elif key_pressed == "x":
+        laser.direction = 315
 
 
 def move_laser(world: World):
