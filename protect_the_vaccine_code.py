@@ -265,21 +265,24 @@ def find_closer_entity(world: World):
 
 def zombie_direction(zombie: Zombie, entity: DesignerObject):
     """ Change the direction of the zombie to follow the entity """
-    # [1] Finds the arc tangent to determine angle the zombie should follow
     if zombie.x > entity.x:
         zombie.flip_x = True
-        # zombie.direction = math.degrees(math.atan2(entity.y - zombie.y, entity.x - zombie.x))
-        zombie.direction = 180
+        zombie.direction = get_angle(entity, zombie)
     elif zombie.x < entity.x:
         zombie.flip_x = False
-        # zombie.direction = math.degrees(math.atan2(entity.y - zombie.y, entity.x - zombie.x))
-        zombie.direction = 360
+        zombie.direction = get_angle(entity, zombie)
     if zombie.y > entity.y:
-        # zombie.direction = math.degrees(math.atan2(entity.y - zombie.y, entity.x - zombie.x))
-        zombie.direction = 90
+        zombie.direction = get_angle(entity, zombie)
     elif zombie.y < entity.y:
-        # zombie.direction = math.degrees(math.atan2(entity.y - zombie.y, entity.x - zombie.x))
-        zombie.direction = 270
+        zombie.direction = get_angle(entity, zombie)
+
+
+def get_angle(entity: DesignerObject, zombie: Zombie):
+    """ Gets the angle for the zombie's direction """
+    # [1] atan2 - the arc tangent function to calculate the angle between the x and y coordinate
+    rise = entity.y - zombie.y
+    run = entity.x - zombie.x
+    return math.degrees(math.atan2(-rise, run)) % 360  # Had help from Dr. Bart to fix equation
 
 
 def move_zombie(world: World):
