@@ -32,7 +32,7 @@ the player wins.
 - [x] <b>Zombie Follows</b>: The zombies follow the scientist or the vaccine (whichever is closer)
 - [x] <b>Shoot Lasers Diagonally</b>: bullets can be shot diagonally when pressing certain keys
 - [ ] <b>Item Drop</b>: Create a random chance the zombies will drop a special item (make the player faster, bigger lasers)
-- [ ] <b>Timer</b>: Add the timer
+- [x] <b>Timer</b>: Add the timer
 - [ ] <b>Timer runs out</b>: When timer runs out, a "You Won" screen appears
 - [ ] <b>Score Increase</b>: Add a score that increases every 10 seconds
 - [ ] <b>Game Over Screen</b>: Add the "Game Over" screen displaying time and score

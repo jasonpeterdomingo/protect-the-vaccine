@@ -10,7 +10,8 @@ Image sources:
 Sources (reason for use is explained in the exact line used):
 [1] https://docs.python.org/3/library/math.html
 """
-# *** Note to self: window is 800 x 600 ***
+# Note to self: window is 800 x 600
+# game runs 30fps
 
 from designer import *
 from dataclasses import dataclass
@@ -59,6 +60,7 @@ class World:
     last_keystroke: LastInput
     zombies: list[Zombie]
     vaccine: DesignerObject
+    game_time: int
 
 
 def create_world() -> World:
@@ -67,7 +69,20 @@ def create_world() -> World:
                  Keys(False, False, False, False),
                  [],
                  LastInput(False, False, False, False),
-                 [], create_vaccine())
+                 [], create_vaccine(), 900)
+
+
+def game_timer(world: World):
+    """ Moves the frame up 1 every update """
+    world.game_time -= 1
+
+
+def stop_game(world: World) -> bool:
+    """ Stops the game once the game timer reaches 0 (after 30 seconds) """
+    game_running = False
+    if world.game_time == 0:
+        game_running = True
+    return game_running
 
 
 def create_scientist() -> DesignerObject:
@@ -260,26 +275,27 @@ def create_zombie(x_cord: int, y_cord: int) -> Zombie:
 def spawn_zombies(world: World):
     """ Spawns a zombie randomly between 4 different spawn points """
     spawn_point = randint(0, 250)
-    if spawn_point == 0:
-        new_zombie = create_zombie(randint(0, 800), get_height())
-        new_zombie.scale_x = .17
-        new_zombie.scale_y = .17
-        world.zombies.append(new_zombie)
-    elif spawn_point == 1:
-        new_zombie = create_zombie(get_width(), randint(0, 600))
-        new_zombie.scale_x = .17
-        new_zombie.scale_y = .17
-        world.zombies.append(new_zombie)
-    elif spawn_point == 2:
-        new_zombie = create_zombie(randint(0, 800), 0)
-        new_zombie.scale_x = .17
-        new_zombie.scale_y = .17
-        world.zombies.append(new_zombie)
-    elif spawn_point == 3:
-        new_zombie = create_zombie(0, randint(0, 600))
-        new_zombie.scale_x = .17
-        new_zombie.scale_y = .17
-        world.zombies.append(new_zombie)
+    if len(world.zombies) < 5:
+        if spawn_point == 0:
+            new_zombie = create_zombie(randint(0, 800), get_height())
+            new_zombie.scale_x = .17
+            new_zombie.scale_y = .17
+            world.zombies.append(new_zombie)
+        elif spawn_point == 1:
+            new_zombie = create_zombie(get_width(), randint(0, 600))
+            new_zombie.scale_x = .17
+            new_zombie.scale_y = .17
+            world.zombies.append(new_zombie)
+        elif spawn_point == 2:
+            new_zombie = create_zombie(randint(0, 800), 0)
+            new_zombie.scale_x = .17
+            new_zombie.scale_y = .17
+            world.zombies.append(new_zombie)
+        elif spawn_point == 3:
+            new_zombie = create_zombie(0, randint(0, 600))
+            new_zombie.scale_x = .17
+            new_zombie.scale_y = .17
+            world.zombies.append(new_zombie)
 
 
 def find_closer_entity(world: World):
@@ -307,7 +323,7 @@ def zombie_direction(zombie: Zombie, entity: DesignerObject):
         zombie.direction = get_angle(entity, zombie)
 
 
-def get_angle(entity: DesignerObject, zombie: Zombie):
+def get_angle(entity: DesignerObject, zombie: Zombie) -> float:
     """ Gets the angle for the zombie's direction """
     # [1] was used to apply atan2: the arc tangent function to calculate the angle between the x and y coordinate
     rise = entity.y - zombie.y
@@ -353,7 +369,6 @@ def create_vaccine() -> DesignerObject:
 
 def collide_vaccine_scientist(world: World):
     """ Prevents the scientist from walking over vaccine """
-    # fix problem when holding 2 keys (add diagonal features)
     if colliding(world.scientist, world.vaccine):
         if world.last_keystroke.key_w:
             move_down(world)
@@ -365,7 +380,7 @@ def collide_vaccine_scientist(world: World):
             move_left(world)
 
 
-def zombie_collision(world: World):
+def zombie_collision(world: World) -> bool:
     """ Stops the game if a zombie collides with scientist or vaccine """
     zombie_touches = False
     for zombie in world.zombies:
@@ -388,5 +403,7 @@ when("updating", collide_laser_zombie)
 when("updating", collide_vaccine_scientist)
 when("updating", find_closer_entity)
 when("updating", move_zombie)
+when("updating", game_timer)
+when(stop_game, pause)
 when(zombie_collision, pause)
 start()
