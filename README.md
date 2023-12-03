@@ -34,7 +34,7 @@ the player wins.
 - [ ] <b>Item Drop</b>: Create a random chance the zombies will drop a special item (make the player faster, bigger lasers)
 - [x] <b>Timer</b>: Add the timer
 - [ ] <b>Timer runs out</b>: When timer runs out, a "You Won" screen appears
-- [ ] <b>Score Increase</b>: Add a score that increases every 10 seconds
-- [ ] <b>Game Over Screen</b>: Add the "Game Over" screen displaying time and score
-- [ ] <b>Display Stats on Screen</b>: Display the score and time left
+- [x] <b>Score Increase</b>: Add a score that increases every 10 seconds
+- [ ] <b>Game Over Screen</b>: Add the "Game Over" screen displaying the score
+- [x] <b>Display Stats on Screen</b>: Display the score and time left
 - [ ] <b>Scale</b>: As timer runs out, increase difficulty (faster zombies, need to be hit multiple times)

@@ -9,6 +9,7 @@ Image sources:
 
 Sources (reason for use is explained in the exact line used):
 [1] https://docs.python.org/3/library/math.html
+[2] https://www.w3schools.com/python/ref_string_format.asp
 """
 # Note to self: window is 800 x 600
 # game runs 30fps
@@ -51,6 +52,20 @@ class Zombie(image):
 
 
 @dataclass
+class Timer:
+    """ The time information"""
+    frame_count: int
+    game_time: int
+    screen: DesignerObject
+
+
+@dataclass
+class Score:
+    score: int
+    screen: DesignerObject
+
+
+@dataclass
 class World:
     """ Creates all the variables needed to make the game work """
     scientist: DesignerObject
@@ -60,7 +75,8 @@ class World:
     last_keystroke: LastInput
     zombies: list[Zombie]
     vaccine: DesignerObject
-    game_time: int
+    time_info: Timer
+    score_info: Score
 
 
 def create_world() -> World:
@@ -69,18 +85,26 @@ def create_world() -> World:
                  Keys(False, False, False, False),
                  [],
                  LastInput(False, False, False, False),
-                 [], create_vaccine(), 900)
+                 [], create_vaccine(),
+                 Timer(900, 30,
+                       text("black", "{sec}", 25, get_width()/2, 20)),
+                 Score(0, text("black", "Score: {score}", 25, get_width()/2, 80)))
 
 
 def game_timer(world: World):
-    """ Moves the frame up 1 every update """
-    world.game_time -= 1
+    """ Updates frame count, game time, and score"""
+    world.time_info.frame_count -= 1
+    if world.time_info.frame_count % 30 == 0:
+        world.time_info.game_time -= 1
+
+    if world.time_info.frame_count % 300 == 0:
+        world.score_info.score += 10
 
 
 def stop_game(world: World) -> bool:
     """ Stops the game once the game timer reaches 0 (after 30 seconds) """
     game_running = False
-    if world.game_time == 0:
+    if world.time_info.frame_count == 0:
         game_running = True
     return game_running
 
@@ -346,6 +370,7 @@ def collide_laser_zombie(world: World):
             if colliding(laser, zombie):
                 destroyed_laser.append(laser)
                 destroyed_zombie.append(zombie)
+                world.score_info.score += 1
     world.lasers = filter_from(world.lasers, destroyed_laser)
     world.zombies = filter_from(world.zombies, destroyed_zombie)
 
@@ -389,6 +414,16 @@ def zombie_collision(world: World) -> bool:
     return zombie_touches
 
 
+def time_remaining(world: World):
+    """ Displays time left """
+    world.time_info.screen.text = "{sec}".format(sec=world.time_info.game_time)  # [2] text formatting
+
+
+def update_score(world: World):
+    """ Displays the score """
+    world.score_info.screen.text = "Score: {score}".format(score=str(world.score_info.score))
+
+
 when("starting", create_world)
 when("typing", press_key)
 when("done typing", release_key)
@@ -404,6 +439,8 @@ when("updating", collide_vaccine_scientist)
 when("updating", find_closer_entity)
 when("updating", move_zombie)
 when("updating", game_timer)
+when("updating", time_remaining)
+when("updating", update_score)
 when(stop_game, pause)
 when(zombie_collision, pause)
 start()
