@@ -66,6 +66,11 @@ class Score:
 
 
 @dataclass
+class ResultScreen:
+    header: DesignerObject
+
+
+@dataclass
 class World:
     """ Creates all the variables needed to make the game work """
     scientist: DesignerObject
@@ -80,7 +85,7 @@ class World:
 
 
 def create_world() -> World:
-    """ Create the world"""          
+    """ Create the world"""
     return World(create_scientist(), 10,
                  Keys(False, False, False, False),
                  [],
@@ -96,7 +101,6 @@ def game_timer(world: World):
     world.time_info.frame_count -= 1
     if world.time_info.frame_count % 30 == 0:
         world.time_info.game_time -= 1
-
     if world.time_info.frame_count % 300 == 0:
         world.score_info.score += 10
         difficulty_increase(world)
@@ -327,6 +331,12 @@ def spawn_zombies(world: World):
             world.zombies.append(new_zombie)
 
 
+def difficulty_increase(world: World):
+    """ Increases zombie speed after 10 seconds """
+    for zombie in world.zombies:
+        zombie.speed += 1
+
+
 def find_closer_entity(world: World):
     """ Determine who the zombie should follow """
     for zombie in world.zombies:
@@ -416,12 +426,8 @@ def zombie_collision(world: World) -> bool:
     for zombie in world.zombies:
         if colliding(zombie, world.scientist) or colliding(zombie, world.vaccine):
             zombie_touches = True
+            change_scene("results")
     return zombie_touches
-
-
-def difficulty_increase(world: World):
-    for zombie in world.zombies:
-        zombie.speed += 1
 
 
 def time_remaining(world: World):
@@ -434,7 +440,21 @@ def update_score(world: World):
     world.score_info.screen.text = "Score: {score}".format(score=str(world.score_info.score))
 
 
-when("starting", create_world)
+def create_result_screen(world: World) -> ResultScreen:
+    """ Displays the result of the game """
+    """
+    if world.time_info.game_time == 0:
+        message = "You Won! Your Score was {score}".format(score=world.score_info.score)
+        return ResultScreen(text("black", message))
+    else:
+        message = "You Lost. You had {time} seconds remaining. Your Score was {score}.".format(
+            time=world.time_info.game_time, score=world.score_info.score)
+        return ResultScreen(text("black", message))
+    """
+    return ResultScreen(text("black", "You Lost"))
+
+
+when("starting: world", create_world)
 when("typing", press_key)
 when("done typing", release_key)
 when("updating", control_scientist)
@@ -453,4 +473,5 @@ when("updating", time_remaining)
 when("updating", update_score)
 when(stop_game, pause)
 when(zombie_collision, pause)
+when("starting: results", create_result_screen)
 start()
