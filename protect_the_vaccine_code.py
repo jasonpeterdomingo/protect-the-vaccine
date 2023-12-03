@@ -11,9 +11,7 @@ Sources (reason for use is explained in the exact line used):
 [1] https://docs.python.org/3/library/math.html
 [2] https://www.w3schools.com/python/ref_string_format.asp
 """
-# Note to self: window is 800 x 600
-# game runs 30fps
-
+# Note to self: window is 800 x 600 & game runs 30 FPS
 from designer import *
 from dataclasses import dataclass
 from random import randint
@@ -47,13 +45,14 @@ class Laser(circle):
 
 
 class Zombie(image):
+    """ the zombie's speed and direction """
     speed: int
     direction: float
 
 
 @dataclass
 class Timer:
-    """ The time information"""
+    """ The time information """
     frame_count: int
     game_time: int
     screen: DesignerObject
@@ -61,6 +60,7 @@ class Timer:
 
 @dataclass
 class Score:
+    """ The score information """
     score: int
     screen: DesignerObject
 
@@ -216,21 +216,25 @@ def shoot_laser(world: World, key: str):
             laser_position(new_laser, world.scientist, world.last_keystroke)
             world.lasers.append(new_laser)
     if key == "q":
-        new_laser = create_laser()
-        diagonal_shot(new_laser, world.scientist, "q")
-        world.lasers.append(new_laser)
+        if len(world.lasers) < 5:
+            new_laser = create_laser()
+            diagonal_shot(new_laser, world.scientist, "q")
+            world.lasers.append(new_laser)
     if key == "e":
-        new_laser = create_laser()
-        diagonal_shot(new_laser, world.scientist, "e")
-        world.lasers.append(new_laser)
+        if len(world.lasers) < 5:
+            new_laser = create_laser()
+            diagonal_shot(new_laser, world.scientist, "e")
+            world.lasers.append(new_laser)
     if key == "z":
-        new_laser = create_laser()
-        diagonal_shot(new_laser, world.scientist, "z")
-        world.lasers.append(new_laser)
+        if len(world.lasers) < 5:
+            new_laser = create_laser()
+            diagonal_shot(new_laser, world.scientist, "z")
+            world.lasers.append(new_laser)
     if key == "x":
-        new_laser = create_laser()
-        diagonal_shot(new_laser, world.scientist, "x")
-        world.lasers.append(new_laser)
+        if len(world.lasers) < 5:
+            new_laser = create_laser()
+            diagonal_shot(new_laser, world.scientist, "x")
+            world.lasers.append(new_laser)
 
 
 def laser_position(laser: Laser, scientist_direction: DesignerObject,
@@ -293,7 +297,7 @@ def destroy_laser_y(world: World):
 
 def create_zombie(x_cord: int, y_cord: int) -> Zombie:
     """ Creates the zombie """
-    return Zombie("images/zombie.png", x_cord, y_cord, speed=2)
+    return Zombie("images/zombie.png", x_cord, y_cord, speed=2, direction=0)
 
 
 def spawn_zombies(world: World):
