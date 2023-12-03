@@ -99,6 +99,7 @@ def game_timer(world: World):
 
     if world.time_info.frame_count % 300 == 0:
         world.score_info.score += 10
+        difficulty_increase(world)
 
 
 def stop_game(world: World) -> bool:
@@ -297,7 +298,7 @@ def destroy_laser_y(world: World):
 
 def create_zombie(x_cord: int, y_cord: int) -> Zombie:
     """ Creates the zombie """
-    return Zombie("images/zombie.png", x_cord, y_cord, speed=2, direction=0)
+    return Zombie("images/zombie.png", x_cord, y_cord, speed=1, direction=0)
 
 
 def spawn_zombies(world: World):
@@ -416,6 +417,11 @@ def zombie_collision(world: World) -> bool:
         if colliding(zombie, world.scientist) or colliding(zombie, world.vaccine):
             zombie_touches = True
     return zombie_touches
+
+
+def difficulty_increase(world: World):
+    for zombie in world.zombies:
+        zombie.speed += 1
 
 
 def time_remaining(world: World):
