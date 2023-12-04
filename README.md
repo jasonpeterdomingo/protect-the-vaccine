@@ -12,7 +12,7 @@ closer. If any of the zombies touch the scientist or the vaccine, the vaccine wi
 ending the game. The scientist will shoot their laser to kill the zombies. Also, the player cannot walk over the 
 vaccine and has to surround it to protect it. There is a random chance the zombie will drop a power-up when killed. 
 The apple increases the scientist's speed while the star increases the size of their lasers. Every 10 seconds, the 
-zombies will scale in difficulty:faster, stronger, and larger quantity. When the timer runs out, the player wins.
+zombies will scale in difficulty: faster, stronger, and larger quantity. When the timer runs out, the player wins.
 
 
 ## Preview
