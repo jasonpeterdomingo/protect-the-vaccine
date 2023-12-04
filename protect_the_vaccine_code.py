@@ -90,7 +90,10 @@ class World:
 
 
 def create_world() -> World:
-    """ Create the world """
+    """ Create the world
+    Returns:
+        World: the world screen dataclass
+    """
     return World(create_scientist(), 10,
                  Keys(False, False, False, False),
                  [],
@@ -103,12 +106,18 @@ def create_world() -> World:
 
 
 def create_game_over() -> Results:
-    """ Displays if you lose """
+    """ Displays if you lose
+    Returns:
+        Results: the dataclass displayed in another screen
+    """
     return Results(text("black", "YOU LOST!", 25, get_width() / 2, 20))
 
 
 def create_you_win() -> Results:
-    """ Displays if you win """
+    """ Displays if you win
+       Returns:
+        Results: the dataclass displayed in another screen
+    """
     return Results(text("black", "YOU WIN!", 25, get_width() / 2, 20))
 
 
@@ -123,7 +132,12 @@ def game_timer(world: World):
 
 
 def stop_game(world: World) -> bool:
-    """ Stops the game once the game timer reaches 0 (after 30 seconds) """
+    """ Stops the game once the game timer reaches 0 (after 30 seconds)
+    Args:
+        world (World): the World dataclass
+    Returns:
+        bool: weather the game is running or not running
+    """
     game_not_running = False
     if world.time_info.frame_count == 0:
         game_not_running = True
@@ -132,7 +146,10 @@ def stop_game(world: World) -> bool:
 
 
 def create_scientist() -> DesignerObject:
-    """ Create the scientist"""
+    """ Create the scientist
+    Returns:
+        DesignerObject: the image of a scientist (player)
+    """
     scientist = image("images/scientist.png", 350, 300)
     scientist.scale_x = .4
     scientist.scale_y = .4
@@ -226,7 +243,12 @@ def check_boundaries(world: World):
 
 
 def create_laser(radius: int) -> Laser:
-    """ Create the laser """
+    """ Create the laser
+    Args:
+        radius (int): how wide the circle should be drawn
+    Returns:
+        the Laser circle dataclass with individual speed and direction
+    """
     return Laser("red", radius, speed=10, direction=0)
 
 
@@ -317,7 +339,15 @@ def destroy_laser_y(world: World):
 
 
 def create_zombie(x_cord: int, y_cord: int, speed: int, health: int) -> Zombie:
-    """ Creates the zombie """
+    """ Creates the zombie
+    Args:
+        x_cord (int): the x-coordinate of the zombie
+        y_cord (int): the y-coordinate of the zombie
+        speed (int): the speed of the zombie
+        health (int): the health of the zombie
+    Returns:
+        Zombie: the zombie image dataclass with its speed, direction, and health
+    """
     return Zombie("images/zombie.png", x_cord, y_cord, speed=speed, direction=0, health=health)
 
 
@@ -384,7 +414,13 @@ def zombie_direction(zombie: Zombie, entity: DesignerObject):
 
 
 def get_angle(entity: DesignerObject, zombie: Zombie) -> float:
-    """ Gets the angle for the zombie's direction """
+    """ Gets the angle for the zombie's direction
+    Args:
+        entity (DesignerObject): either the vaccine or scientist
+        zombie (Zombie): the zombie following the entity
+    Returns:
+        float: the degrees which the zombie should travel to reach the entity
+    """
     # [1] was used to apply atan2: the arc tangent function to calculate the angle between the x and y coordinate
     rise = entity.y - zombie.y
     run = entity.x - zombie.x
@@ -430,8 +466,15 @@ def filter_from(old_list: list[DesignerObject], elements_to_remove: list[Designe
 
 
 def create_power_ups(world: World, x_cord: int, y_cord: int) -> DesignerObject:
-    """ Chance a dead zombie will drop a power up """
-    spawn_chance = randint(0, 40)
+    """ Chance a dead zombie will drop a power up
+    Args:
+         world (World): the World dataclass
+         x_cord (int): the x coordinate of where the zombie died
+         y_cord (int): the y coordinate of where the zombie died
+     Returns:
+         DesignerObject: the power-up emoji
+    """
+    spawn_chance = randint(0, 10)
     if spawn_chance == 0:
         power_up = Emoji("🍎", x_cord, y_cord)
         world.power_ups.append(power_up)
@@ -444,7 +487,7 @@ def create_power_ups(world: World, x_cord: int, y_cord: int) -> DesignerObject:
 
 
 def power_up_collision(world: World):
-    """ Checks if scientist touches power-up and gives the scientist abilities"""
+    """ Checks if scientist touches power-up and gives the scientist abilities """
     destroyed_power_up = []
     for power_up in world.power_ups:
         for index in world.power_up_index:
@@ -461,7 +504,10 @@ def power_up_collision(world: World):
 
 
 def create_vaccine() -> DesignerObject:
-    """ Create the vaccine """
+    """ Create the vaccine
+    Returns:
+        DesignerObject: the vaccine image
+    """
     vaccine = image("images/vaccine.png", 420, 300)
     return vaccine
 
@@ -480,7 +526,12 @@ def collide_vaccine_scientist(world: World):
 
 
 def zombie_collision(world: World) -> bool:
-    """ Stops the game if a zombie collides with scientist or vaccine """
+    """ Stops the game if a zombie collides with scientist or vaccine
+    Args:
+        world: the World dataclass
+    Returns:
+        bool: whether the zombie touched the entity or not
+    """
     zombie_touches = False
     for zombie in world.zombies:
         if colliding(zombie, world.scientist) or colliding(zombie, world.vaccine):
