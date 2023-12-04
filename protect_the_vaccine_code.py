@@ -11,7 +11,7 @@ Sources (reason for use is explained in the exact line used):
 [1] https://docs.python.org/3/library/math.html
 [2] https://www.w3schools.com/python/ref_string_format.asp
 """
-# Note to self: window is 800 x 600 & game runs 30 FPS
+
 from designer import *
 from dataclasses import dataclass
 from random import randint
@@ -67,10 +67,9 @@ class Score:
 
 
 @dataclass
-class ResultScreen:
+class Results:
     """ Displays the results at the end"""
     header: DesignerObject
-    score_info: Score
 
 
 @dataclass
@@ -103,10 +102,14 @@ def create_world() -> World:
                  [], False, [])
 
 
-def create_result_screen() -> ResultScreen:
-    """ Displays the result of the game """
-    return ResultScreen(text("black", "YOU LOST!", 25, get_width()/2, 20),
-                        Score(0, text("black", "Score: {score}", 25, get_width() / 2, 80)))
+def create_game_over() -> Results:
+    """ Displays if you lose """
+    return Results(text("black", "YOU LOST!", 25, get_width() / 2, 20))
+
+
+def create_you_win() -> Results:
+    """ Displays if you win """
+    return Results(text("black", "YOU WIN!", 25, get_width() / 2, 20))
 
 
 def game_timer(world: World):
@@ -124,7 +127,7 @@ def stop_game(world: World) -> bool:
     game_not_running = False
     if world.time_info.frame_count == 0:
         game_not_running = True
-        change_scene("results")
+        change_scene("you_win")
     return game_not_running
 
 
@@ -428,7 +431,7 @@ def filter_from(old_list: list[DesignerObject], elements_to_remove: list[Designe
 
 def create_power_ups(world: World, x_cord: int, y_cord: int) -> DesignerObject:
     """ Chance a dead zombie will drop a power up """
-    spawn_chance = randint(0, 50)
+    spawn_chance = randint(0, 40)
     if spawn_chance == 0:
         power_up = Emoji("🍎", x_cord, y_cord)
         world.power_ups.append(power_up)
@@ -482,7 +485,7 @@ def zombie_collision(world: World) -> bool:
     for zombie in world.zombies:
         if colliding(zombie, world.scientist) or colliding(zombie, world.vaccine):
             zombie_touches = True
-            change_scene("results")
+            change_scene("game_over")
     return zombie_touches
 
 
@@ -502,11 +505,6 @@ def update_score(world: World):
     """ Displays the score """
     world.score_info.screen.text = "Score: {score}".format(score=str(world.score_info.score))
 
-
-"""
-def result_score(result: ResultScreen):
-    result.score_info.screen.text = "Score: {score}".format(score=str(result.score_info.score))
-"""
 
 when("starting: world", create_world)
 when("typing: world", press_key)
@@ -528,6 +526,6 @@ when("updating: world", time_remaining)
 when("updating: world", update_score)
 when(stop_game, pause)
 when(zombie_collision, pause)
-when("starting: results", create_result_screen)
-# when("updating: results", result_score)
+when("starting: game_over", create_game_over)
+when("starting: you_win", create_you_win)
 start()
