@@ -48,6 +48,7 @@ class Zombie(image):
     """ the zombie's speed and direction """
     speed: int
     direction: float
+    health: int
 
 
 @dataclass
@@ -98,7 +99,7 @@ def create_world() -> World:
                  Score(0, text("black", "Score: {score}", 25, get_width()/2, 80)))
 
 
-def create_result_screen(result: ResultScreen) -> ResultScreen:
+def create_result_screen() -> ResultScreen:
     """ Displays the result of the game """
     return ResultScreen(text("black", "YOU LOST!", 25, get_width()/2, 20),
                         Score(0, text("black", "Score: {score}", 25, get_width() / 2, 80)))
@@ -116,10 +117,11 @@ def game_timer(world: World):
 
 def stop_game(world: World) -> bool:
     """ Stops the game once the game timer reaches 0 (after 30 seconds) """
-    game_running = False
+    game_not_running = False
     if world.time_info.frame_count == 0:
-        game_running = True
-    return game_running
+        game_not_running = True
+        change_scene("results")
+    return game_not_running
 
 
 def create_scientist() -> DesignerObject:
@@ -310,7 +312,7 @@ def destroy_laser_y(world: World):
 
 def create_zombie(x_cord: int, y_cord: int) -> Zombie:
     """ Creates the zombie """
-    return Zombie("images/zombie.png", x_cord, y_cord, speed=1, direction=0)
+    return Zombie("images/zombie.png", x_cord, y_cord, speed=1, direction=0, health=100)
 
 
 def spawn_zombies(world: World):
@@ -337,12 +339,6 @@ def spawn_zombies(world: World):
             new_zombie.scale_x = .17
             new_zombie.scale_y = .17
             world.zombies.append(new_zombie)
-
-
-def difficulty_increase(world: World):
-    """ Increases zombie speed after 10 seconds """
-    for zombie in world.zombies:
-        zombie.speed += 1
 
 
 def find_closer_entity(world: World):
@@ -391,9 +387,13 @@ def collide_laser_zombie(world: World):
     for laser in world.lasers:
         for zombie in world.zombies:
             if colliding(laser, zombie):
-                destroyed_laser.append(laser)
-                destroyed_zombie.append(zombie)
-                world.score_info.score += 1
+                zombie.health -= 100
+                if zombie.health <= 0:
+                    destroyed_laser.append(laser)
+                    destroyed_zombie.append(zombie)
+                    world.score_info.score += 1
+                else:
+                    destroyed_laser.append(laser)
     world.lasers = filter_from(world.lasers, destroyed_laser)
     world.zombies = filter_from(world.zombies, destroyed_zombie)
 
@@ -438,6 +438,13 @@ def zombie_collision(world: World) -> bool:
     return zombie_touches
 
 
+def difficulty_increase(world: World):
+    """ Increases zombie speed and health after 10 seconds """
+    for zombie in world.zombies:
+        zombie.speed += 1
+        zombie.health = 200
+
+
 def time_remaining(world: World):
     """ Displays time left """
     world.time_info.screen.text = "{sec}".format(sec=world.time_info.game_time)  # [2] text formatting
@@ -450,7 +457,7 @@ def update_score(world: World):
 
 """
 def result_score(result: ResultScreen):
-    result.score_info.text = "Score: {score}".format(score=str(result.score_info.score))
+    result.score_info.screen.text = "Score: {score}".format(score=str(result.score_info.score))
 """
 
 when("starting: world", create_world)
@@ -471,7 +478,7 @@ when("updating: world", game_timer)
 when("updating: world", time_remaining)
 when("updating: world", update_score)
 when(stop_game, pause)
-when(zombie_collision, pause, create_result_screen)
+when(zombie_collision, pause)
 when("starting: results", create_result_screen)
-#when("updating: results", result_score)
+# when("updating: results", result_score)
 start()

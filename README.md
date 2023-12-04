@@ -37,4 +37,4 @@ the player wins.
 - [x] <b>Score Increase</b>: Add a score that increases every 10 seconds
 - [ ] <b>Game Over Screen</b>: Add the "Game Over" screen displaying the score
 - [x] <b>Display Stats on Screen</b>: Display the score and time left
-- [ ] <b>Scale</b>: As timer runs out, increase difficulty (faster zombies, need to be hit multiple times)
+- [x] <b>Scale</b>: As timer runs out, increase difficulty (faster zombies, need to be hit multiple times)
