@@ -7,15 +7,21 @@ Jason Domingo: jayprdom@udel.edu
 
 ## About
 *Protect the Vaccine* is a game where the scientist has to protect the vaccine from the zombies 
-spawning from all 4 sides of the screen. If any of the zombies touch the scientist or the vaccine,
-the vaccine will be contaminated, thus, ending the game. The scientist will shoot their laser to kill the zombies. 
-There is a random chance the zombie will drop a power-up when killed. The apple increases the scientist's speed while
-the star increases the size of their lasers. Every 10 seconds, the zombies will scale in difficulty: 
-faster, stronger, and larger quantity. When the timer runs out, the player wins.
+spawning from all 4 sides of the screen. The zombie's goal is to either chase the player or the vaccine, whichever is 
+closer. If any of the zombies touch the scientist or the vaccine, the vaccine will be contaminated, thus, 
+ending the game. The scientist will shoot their laser to kill the zombies. Also, the player cannot walk over the 
+vaccine and has to surround it to protect it. There is a random chance the zombie will drop a power-up when killed. 
+The apple increases the scientist's speed while the star increases the size of their lasers. Every 10 seconds, the 
+zombies will scale in difficulty:faster, stronger, and larger quantity. When the timer runs out, the player wins.
+
+
+## Preview
+#### YOUTUBE LINK: https://youtu.be/8QwdTDLnzOU?si=CnmlRFcF9T2dJum0
+
 
 ## Instructions
 - <b>Moving:</b> The scientist can move up, down, left, and right by pressing "w", "s", "a", "d" respectively.
-- <b>Shooting:</b> Press the space bar
+- <b>Shooting:</b> Press the space bar. The laser will shoot in the last direction the user inputs.
 - <b>Diagonal Shooting</b> Press "q", "e", "z", and "x" to shoot up-left, up-right, down-left, and down-right
 
 
