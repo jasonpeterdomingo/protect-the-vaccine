@@ -67,7 +67,9 @@ class Score:
 
 @dataclass
 class ResultScreen:
+    """ Displays the results at the end"""
     header: DesignerObject
+    score_info: Score
 
 
 @dataclass
@@ -85,7 +87,7 @@ class World:
 
 
 def create_world() -> World:
-    """ Create the world"""
+    """ Create the world """
     return World(create_scientist(), 10,
                  Keys(False, False, False, False),
                  [],
@@ -94,6 +96,12 @@ def create_world() -> World:
                  Timer(900, 30,
                        text("black", "{sec}", 25, get_width()/2, 20)),
                  Score(0, text("black", "Score: {score}", 25, get_width()/2, 80)))
+
+
+def create_result_screen(result: ResultScreen) -> ResultScreen:
+    """ Displays the result of the game """
+    return ResultScreen(text("black", "YOU LOST!", 25, get_width()/2, 20),
+                        Score(0, text("black", "Score: {score}", 25, get_width() / 2, 80)))
 
 
 def game_timer(world: World):
@@ -440,38 +448,30 @@ def update_score(world: World):
     world.score_info.screen.text = "Score: {score}".format(score=str(world.score_info.score))
 
 
-def create_result_screen(world: World) -> ResultScreen:
-    """ Displays the result of the game """
-    """
-    if world.time_info.game_time == 0:
-        message = "You Won! Your Score was {score}".format(score=world.score_info.score)
-        return ResultScreen(text("black", message))
-    else:
-        message = "You Lost. You had {time} seconds remaining. Your Score was {score}.".format(
-            time=world.time_info.game_time, score=world.score_info.score)
-        return ResultScreen(text("black", message))
-    """
-    return ResultScreen(text("black", "You Lost"))
-
+"""
+def result_score(result: ResultScreen):
+    result.score_info.text = "Score: {score}".format(score=str(result.score_info.score))
+"""
 
 when("starting: world", create_world)
-when("typing", press_key)
-when("done typing", release_key)
-when("updating", control_scientist)
-when("typing", shoot_laser)
-when("updating", move_laser)
-when("updating", destroy_laser_x)
-when("updating", destroy_laser_y)
-when("updating", check_boundaries)
-when("updating", spawn_zombies)
-when("updating", collide_laser_zombie)
-when("updating", collide_vaccine_scientist)
-when("updating", find_closer_entity)
-when("updating", move_zombie)
-when("updating", game_timer)
-when("updating", time_remaining)
-when("updating", update_score)
+when("typing: world", press_key)
+when("done typing: world", release_key)
+when("updating: world", control_scientist)
+when("typing: world", shoot_laser)
+when("updating: world", move_laser)
+when("updating: world", destroy_laser_x)
+when("updating: world", destroy_laser_y)
+when("updating: world", check_boundaries)
+when("updating: world", spawn_zombies)
+when("updating: world", collide_laser_zombie)
+when("updating: world", collide_vaccine_scientist)
+when("updating: world", find_closer_entity)
+when("updating: world", move_zombie)
+when("updating: world", game_timer)
+when("updating: world", time_remaining)
+when("updating: world", update_score)
 when(stop_game, pause)
-when(zombie_collision, pause)
+when(zombie_collision, pause, create_result_screen)
 when("starting: results", create_result_screen)
+#when("updating: results", result_score)
 start()
