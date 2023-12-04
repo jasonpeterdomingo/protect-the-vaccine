@@ -45,7 +45,7 @@ class Laser(circle):
 
 
 class Zombie(image):
-    """ the zombie's speed and direction """
+    """ The zombie's speed and direction """
     speed: int
     direction: float
     health: int
@@ -91,6 +91,7 @@ class World:
 
 def create_world() -> World:
     """ Create the world
+
     Returns:
         World: the world screen dataclass
     """
@@ -107,6 +108,7 @@ def create_world() -> World:
 
 def create_game_over() -> Results:
     """ Displays if you lose
+
     Returns:
         Results: the dataclass displayed in another screen
     """
@@ -115,6 +117,7 @@ def create_game_over() -> Results:
 
 def create_you_win() -> Results:
     """ Displays if you win
+
        Returns:
         Results: the dataclass displayed in another screen
     """
@@ -122,7 +125,11 @@ def create_you_win() -> Results:
 
 
 def game_timer(world: World):
-    """ Updates frame count, game time, and score"""
+    """ Updates frame count, game time, and score
+
+    Args:
+        world (World): the World dataclass
+    """
     world.time_info.frame_count -= 1
     if world.time_info.frame_count % 30 == 0:
         world.time_info.game_time -= 1
@@ -133,6 +140,7 @@ def game_timer(world: World):
 
 def stop_game(world: World) -> bool:
     """ Stops the game once the game timer reaches 0 (after 30 seconds)
+
     Args:
         world (World): the World dataclass
     Returns:
@@ -147,6 +155,7 @@ def stop_game(world: World) -> bool:
 
 def create_scientist() -> DesignerObject:
     """ Create the scientist
+
     Returns:
         DesignerObject: the image of a scientist (player)
     """
@@ -157,29 +166,50 @@ def create_scientist() -> DesignerObject:
 
 
 def move_left(world: World):
-    """ Move the scientist left """
+    """ Move the scientist left
+
+    Args:
+        world (World): the World dataclass
+    """
     world.scientist.flip_x = True
     world.scientist.x += -world.scientist_speed
 
 
 def move_right(world: World):
-    """ Move the scientist right """
+    """ Move the scientist right
+
+    Args:
+        world (World): the World dataclass
+    """
     world.scientist.flip_x = False
     world.scientist.x += world.scientist_speed
 
 
 def move_up(world: World):
-    """ Move the scientist up """
+    """ Move the scientist up
+
+    Args:
+        world (World): the World dataclass
+    """
     world.scientist.y += -world.scientist_speed
 
 
 def move_down(world: World):
-    """ Move the scientist down """
+    """ Move the scientist down
+
+    Args:
+        world (World): the World dataclass
+    """
     world.scientist.y += world.scientist_speed
 
 
 def press_key(key: str, world: World):
-    """ When a key is pressed, the respected Boolean and the last keystroke is activated"""
+    """ When a key is pressed, the respected Boolean and the last keystroke is activated
+
+    Args:
+        key (str): the key pressed
+        world (World): the World dataclass
+    """
     if key == "w":
         world.keys.key_w = True
         reset_last_input(world)
@@ -199,7 +229,11 @@ def press_key(key: str, world: World):
 
 
 def reset_last_input(world: World):
-    """ Resets the last input so that the last keystroke can be stored """
+    """ Resets the last input so that the last keystroke can be stored
+
+    Args:
+        world (World): the World dataclass
+    """
     world.last_keystroke.key_w = False
     world.last_keystroke.key_s = False
     world.last_keystroke.key_a = False
@@ -207,7 +241,12 @@ def reset_last_input(world: World):
 
 
 def release_key(key: str, world: World):
-    """ When a key is released, the respected Boolean is deactivated """
+    """ When a key is released, the respected Boolean is deactivated
+
+    Args:
+        key (str): the key released
+        world (World): the World dataclass
+    """
     if key == "w":
         world.keys.key_w = False
     if key == "s":
@@ -219,7 +258,11 @@ def release_key(key: str, world: World):
 
 
 def control_scientist(world: World):
-    """ Checks which key is pressed (True) and moves the character in the respected direction until False """
+    """ Checks which key is pressed (True) and moves the character in the respected direction until False
+
+    Args:
+        world (World): the World dataclass
+    """
     if world.keys.key_w:
         move_up(world)
     if world.keys.key_s:
@@ -231,7 +274,11 @@ def control_scientist(world: World):
 
 
 def check_boundaries(world: World):
-    """Prevents the scientist from walking offscreen """
+    """Prevents the scientist from walking offscreen
+
+    Args:
+        world (World): the World dataclass
+    """
     if world.scientist.x > get_width():
         move_left(world)
     elif world.scientist.x < 0:
@@ -244,6 +291,7 @@ def check_boundaries(world: World):
 
 def create_laser(radius: int) -> Laser:
     """ Create the laser
+
     Args:
         radius (int): how wide the circle should be drawn
     Returns:
@@ -253,7 +301,12 @@ def create_laser(radius: int) -> Laser:
 
 
 def shoot_laser(world: World, key: str):
-    """ Laser is shot when the user presses the space bar """
+    """ Laser is shot when the user presses the space bar
+
+    Args:
+        world (World): the World dataclass
+        key: the key pressed
+    """
     radius = 10
     if world.powered:
         radius = 30
@@ -282,7 +335,13 @@ def shoot_laser(world: World, key: str):
 
 def laser_position(laser: Laser, scientist_direction: DesignerObject,
                    shooting_direction: LastInput):
-    """ Have the laser appear where the scientist is located and shoot based on last input """
+    """ Have the laser appear where the scientist is located and shoot based on last input
+
+    Args:
+        laser (Laser): the circle dataclass Laser
+        scientist_direction (DesignerObject): where the scientist exists on screen
+        shooting_direction (LastInput): the last input recorded to determine shooting direction
+    """
     laser.y = scientist_direction.y
     laser.x = scientist_direction.x
     if shooting_direction.key_w:
@@ -297,7 +356,13 @@ def laser_position(laser: Laser, scientist_direction: DesignerObject,
 
 
 def diagonal_shot(laser: Laser, scientist_direction: DesignerObject, key_pressed: str):
-    """ Have the laser appear where the scientist is and shoots diagonally based on key pressed """
+    """ Have the laser appear where the scientist is and shoots diagonally based on key pressed
+
+    Args:
+        laser (Laser): the circle Laser dataclass
+        scientist_direction (DesignerObject): where the scientist is located
+        key_pressed: the key pressed
+    """
     laser.y = scientist_direction.y
     laser.x = scientist_direction.x
     if key_pressed == "q":
@@ -311,13 +376,21 @@ def diagonal_shot(laser: Laser, scientist_direction: DesignerObject, key_pressed
 
 
 def move_laser(world: World):
-    """ Moves each laser at a constant speed and direction """
+    """ Moves each laser at a constant speed and direction
+
+     Args:
+        world (World): the World dataclass
+    """
     for laser in world.lasers:
         move_forward(laser, laser.speed, laser.direction)
 
 
 def destroy_laser_x(world: World):
-    """ Destroys the laser that hits offscreen in the x-direction """
+    """ Destroys the laser that hits offscreen in the x-direction
+
+    Args:
+        world (World): the World dataclass
+    """
     kept = []
     for laser in world.lasers:
         if 0 < laser.x < get_width():
@@ -328,7 +401,11 @@ def destroy_laser_x(world: World):
 
 
 def destroy_laser_y(world: World):
-    """ Destroys the laser that hits offscreen in the y-direction """
+    """ Destroys the laser that hits offscreen in the y-direction
+
+    Args:
+        world (World): the World dataclass
+    """
     kept = []
     for laser in world.lasers:
         if 0 < laser.y < get_height():
@@ -340,6 +417,7 @@ def destroy_laser_y(world: World):
 
 def create_zombie(x_cord: int, y_cord: int, speed: int, health: int) -> Zombie:
     """ Creates the zombie
+
     Args:
         x_cord (int): the x-coordinate of the zombie
         y_cord (int): the y-coordinate of the zombie
@@ -352,7 +430,11 @@ def create_zombie(x_cord: int, y_cord: int, speed: int, health: int) -> Zombie:
 
 
 def spawn_zombies(world: World):
-    """ Spawns a zombie randomly between 4 different spawn points """
+    """ Spawns a zombie randomly between 4 different spawn points
+
+    Args:
+        world (World): the World dataclass
+    """
     speed = 1
     health = 1
     quantity = 5
@@ -389,7 +471,11 @@ def spawn_zombies(world: World):
 
 
 def find_closer_entity(world: World):
-    """ Determine who the zombie should follow """
+    """ Determine who the zombie should follow
+
+    Args:
+        world (World): the World dataclass
+    """
     for zombie in world.zombies:
         if ((zombie.x - world.vaccine.x) < (zombie.x - world.scientist.x) or
                 (zombie.y - world.vaccine.y) < (zombie.y - world.scientist.y)):
@@ -400,7 +486,12 @@ def find_closer_entity(world: World):
 
 
 def zombie_direction(zombie: Zombie, entity: DesignerObject):
-    """ Change the direction of the zombie to follow the entity """
+    """ Change the direction of the zombie to follow the entity
+
+    Args:
+        zombie (Zombie): the image Zombie dataclass
+        entity (DesignerObject): either the scientist or vaccine
+    """
     if zombie.x > entity.x:
         zombie.flip_x = True
         zombie.direction = get_angle(entity, zombie)
@@ -415,6 +506,7 @@ def zombie_direction(zombie: Zombie, entity: DesignerObject):
 
 def get_angle(entity: DesignerObject, zombie: Zombie) -> float:
     """ Gets the angle for the zombie's direction
+
     Args:
         entity (DesignerObject): either the vaccine or scientist
         zombie (Zombie): the zombie following the entity
@@ -428,13 +520,21 @@ def get_angle(entity: DesignerObject, zombie: Zombie) -> float:
 
 
 def move_zombie(world: World):
-    """ Move each zombie """
+    """ Move each zombie
+
+    Args:
+        world (World): the World dataclass
+    """
     for zombie in world.zombies:
         move_forward(zombie, zombie.speed, zombie.direction)
 
 
 def collide_laser_zombie(world: World):
-    """ Checks if the laser and zombie collides and removes them """
+    """ Checks if the laser and zombie collides and removes them
+
+    Args:
+        world (World): the World dataclass
+    """
     destroyed_laser = []
     destroyed_zombie = []
     for laser in world.lasers:
@@ -455,7 +555,12 @@ def collide_laser_zombie(world: World):
 
 
 def filter_from(old_list: list[DesignerObject], elements_to_remove: list[DesignerObject]):
-    """ Destroys elements from the old list and returns a new list """
+    """ Destroys elements from the old list and returns a new list
+
+    Args:
+        old_list (list[DesignerObject]): the full list of DesignerObject before filtering
+        elements_to_remove(list[DesignerObject]: the elements to be destroyed
+    """
     new_list = []
     for item in old_list:
         if item in elements_to_remove:
@@ -467,6 +572,7 @@ def filter_from(old_list: list[DesignerObject], elements_to_remove: list[Designe
 
 def create_power_ups(world: World, x_cord: int, y_cord: int) -> DesignerObject:
     """ Chance a dead zombie will drop a power up
+
     Args:
          world (World): the World dataclass
          x_cord (int): the x coordinate of where the zombie died
@@ -487,7 +593,11 @@ def create_power_ups(world: World, x_cord: int, y_cord: int) -> DesignerObject:
 
 
 def power_up_collision(world: World):
-    """ Checks if scientist touches power-up and gives the scientist abilities """
+    """ Checks if scientist touches power-up and gives the scientist abilities
+
+    Args:
+        world (World): the World dataclass
+    """
     destroyed_power_up = []
     for power_up in world.power_ups:
         for index in world.power_up_index:
@@ -505,6 +615,7 @@ def power_up_collision(world: World):
 
 def create_vaccine() -> DesignerObject:
     """ Create the vaccine
+
     Returns:
         DesignerObject: the vaccine image
     """
@@ -513,7 +624,11 @@ def create_vaccine() -> DesignerObject:
 
 
 def collide_vaccine_scientist(world: World):
-    """ Prevents the scientist from walking over vaccine """
+    """ Prevents the scientist from walking over vaccine
+
+    Args:
+        world (World): the World dataclass
+    """
     if colliding(world.scientist, world.vaccine):
         if world.last_keystroke.key_w:
             move_down(world)
@@ -527,6 +642,7 @@ def collide_vaccine_scientist(world: World):
 
 def zombie_collision(world: World) -> bool:
     """ Stops the game if a zombie collides with scientist or vaccine
+
     Args:
         world: the World dataclass
     Returns:
@@ -541,19 +657,31 @@ def zombie_collision(world: World) -> bool:
 
 
 def difficulty_increase(world: World):
-    """ Increases current zombies' speed and health after 10 seconds """
+    """ Increases current zombies' speed and health after 10 seconds
+
+    Args:
+        world (World): the World dataclass
+    """
     for zombie in world.zombies:
         zombie.speed += 1
         zombie.health = 200
 
 
 def time_remaining(world: World):
-    """ Displays time left """
+    """ Displays time left
+
+    Args:
+        world (World): the World dataclass
+    """
     world.time_info.screen.text = "{sec}".format(sec=world.time_info.game_time)  # [2] text formatting
 
 
 def update_score(world: World):
-    """ Displays the score """
+    """ Displays the score
+
+    Args:
+        world (World): the World dataclass
+    """
     world.score_info.screen.text = "Score: {score}".format(score=str(world.score_info.score))
 
 
