@@ -77,7 +77,7 @@ class ResultScreen:
 class World:
     """ Creates all the variables needed to make the game work """
     scientist: DesignerObject
-    object_speed: int
+    scientist_speed: int
     keys: Keys
     lasers: list[Laser]
     last_keystroke: LastInput
@@ -85,6 +85,9 @@ class World:
     vaccine: DesignerObject
     time_info: Timer
     score_info: Score
+    power_ups: list[DesignerObject]
+    powered: bool
+    power_up_index: list[int]
 
 
 def create_world() -> World:
@@ -96,7 +99,8 @@ def create_world() -> World:
                  [], create_vaccine(),
                  Timer(900, 30,
                        text("black", "{sec}", 25, get_width()/2, 20)),
-                 Score(0, text("black", "Score: {score}", 25, get_width()/2, 80)))
+                 Score(0, text("black", "Score: {score}", 25, get_width()/2, 80)),
+                 [], False, [])
 
 
 def create_result_screen() -> ResultScreen:
@@ -135,23 +139,23 @@ def create_scientist() -> DesignerObject:
 def move_left(world: World):
     """ Move the scientist left """
     world.scientist.flip_x = True
-    world.scientist.x += -world.object_speed
+    world.scientist.x += -world.scientist_speed
 
 
 def move_right(world: World):
     """ Move the scientist right """
     world.scientist.flip_x = False
-    world.scientist.x += world.object_speed
+    world.scientist.x += world.scientist_speed
 
 
 def move_up(world: World):
     """ Move the scientist up """
-    world.scientist.y += -world.object_speed
+    world.scientist.y += -world.scientist_speed
 
 
 def move_down(world: World):
     """ Move the scientist down """
-    world.scientist.y += world.object_speed
+    world.scientist.y += world.scientist_speed
 
 
 def press_key(key: str, world: World):
@@ -218,36 +222,35 @@ def check_boundaries(world: World):
         move_down(world)
 
 
-def create_laser() -> Laser:
+def create_laser(radius: int) -> Laser:
     """ Create the laser """
-    return Laser("red", 10, speed=10, direction=0)
+    return Laser("red", radius, speed=10, direction=0)
 
 
 def shoot_laser(world: World, key: str):
     """ Laser is shot when the user presses the space bar """
-    if key == "space":
-        if len(world.lasers) < 5:
-            new_laser = create_laser()
+    radius = 10
+    if world.powered:
+        radius = 30
+    if len(world.lasers) < 5:
+        if key == "space":
+            new_laser = create_laser(radius)
             laser_position(new_laser, world.scientist, world.last_keystroke)
             world.lasers.append(new_laser)
-    if key == "q":
-        if len(world.lasers) < 5:
-            new_laser = create_laser()
+        if key == "q":
+            new_laser = create_laser(radius)
             diagonal_shot(new_laser, world.scientist, "q")
             world.lasers.append(new_laser)
-    if key == "e":
-        if len(world.lasers) < 5:
-            new_laser = create_laser()
+        if key == "e":
+            new_laser = create_laser(radius)
             diagonal_shot(new_laser, world.scientist, "e")
             world.lasers.append(new_laser)
-    if key == "z":
-        if len(world.lasers) < 5:
-            new_laser = create_laser()
+        if key == "z":
+            new_laser = create_laser(radius)
             diagonal_shot(new_laser, world.scientist, "z")
             world.lasers.append(new_laser)
-    if key == "x":
-        if len(world.lasers) < 5:
-            new_laser = create_laser()
+        if key == "x":
+            new_laser = create_laser(radius)
             diagonal_shot(new_laser, world.scientist, "x")
             world.lasers.append(new_laser)
 
@@ -324,11 +327,11 @@ def spawn_zombies(world: World):
     if world.time_info.frame_count <= 600:
         speed = 2
         health = 200
-        quantity = 10
+        quantity = 8
     elif world.time_info.frame_count <= 300:
         speed = 3
         health = 300
-        quantity = 15
+        quantity = 10
 
     spawn_point = randint(0, 250)
     if len(world.zombies) < quantity:
@@ -404,6 +407,7 @@ def collide_laser_zombie(world: World):
                 if zombie.health <= 0:
                     destroyed_laser.append(laser)
                     destroyed_zombie.append(zombie)
+                    create_power_ups(world, zombie.x, zombie.y)
                     world.score_info.score += 1
                 else:
                     destroyed_laser.append(laser)
@@ -420,6 +424,36 @@ def filter_from(old_list: list[DesignerObject], elements_to_remove: list[Designe
         else:
             new_list.append(item)
     return new_list
+
+
+def create_power_ups(world: World, x_cord: int, y_cord: int) -> DesignerObject:
+    """ Chance a dead zombie will drop a power up """
+    spawn_chance = randint(0, 1)
+    if spawn_chance == 0:
+        power_up = Emoji("🍎", x_cord, y_cord)
+        world.power_ups.append(power_up)
+        world.power_up_index.append(0)
+    elif spawn_chance == 1:
+        power_up = Emoji("🌟", x_cord, y_cord)
+        world.power_ups.append(power_up)
+        world.power_up_index.append(1)
+        return power_up
+
+
+def power_up_collision(world: World):
+    destroyed_power_up = []
+    for power_up in world.power_ups:
+        for index in world.power_up_index:
+            if index == 0:
+                if colliding(world.scientist, power_up):
+                    destroyed_power_up.append(power_up)
+                    world.scientist_speed = 15
+            elif index == 1:
+                if colliding(world.scientist, power_up):
+                    destroyed_power_up.append(power_up)
+                    world.powered = True
+
+    world.power_ups = filter_from(world.power_ups, destroyed_power_up)
 
 
 def create_vaccine() -> DesignerObject:
@@ -487,6 +521,7 @@ when("updating: world", collide_laser_zombie)
 when("updating: world", collide_vaccine_scientist)
 when("updating: world", find_closer_entity)
 when("updating: world", move_zombie)
+when("updating: world", power_up_collision)
 when("updating: world", game_timer)
 when("updating: world", time_remaining)
 when("updating: world", update_score)

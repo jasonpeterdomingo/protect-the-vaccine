@@ -31,7 +31,7 @@ the player wins.
 ### Phase 3
 - [x] <b>Zombie Follows</b>: The zombies follow the scientist or the vaccine (whichever is closer)
 - [x] <b>Shoot Lasers Diagonally</b>: bullets can be shot diagonally when pressing certain keys
-- [ ] <b>Item Drop</b>: Create a random chance the zombies will drop a special item (make the player faster, bigger lasers)
+- [x] <b>Item Drop</b>: Create a random chance the zombies will drop a special item (make the player faster, bigger lasers)
 - [x] <b>Timer</b>: Add the timer
 - [ ] <b>Timer runs out</b>: When timer runs out, a "You Won" screen appears
 - [x] <b>Score Increase</b>: Add a score that increases every 10 seconds
