@@ -323,7 +323,6 @@ def spawn_zombies(world: World):
     speed = 1
     health = 1
     quantity = 5
-
     if world.time_info.frame_count <= 600:
         speed = 2
         health = 200
@@ -332,7 +331,6 @@ def spawn_zombies(world: World):
         speed = 3
         health = 300
         quantity = 10
-
     spawn_point = randint(0, 250)
     if len(world.zombies) < quantity:
         if spawn_point == 0:
@@ -403,6 +401,8 @@ def collide_laser_zombie(world: World):
     for laser in world.lasers:
         for zombie in world.zombies:
             if colliding(laser, zombie):
+                if laser.radius == 30:
+                    zombie.health -= 300
                 zombie.health -= 100
                 if zombie.health <= 0:
                     destroyed_laser.append(laser)
@@ -428,7 +428,7 @@ def filter_from(old_list: list[DesignerObject], elements_to_remove: list[Designe
 
 def create_power_ups(world: World, x_cord: int, y_cord: int) -> DesignerObject:
     """ Chance a dead zombie will drop a power up """
-    spawn_chance = randint(0, 1)
+    spawn_chance = randint(0, 50)
     if spawn_chance == 0:
         power_up = Emoji("🍎", x_cord, y_cord)
         world.power_ups.append(power_up)
@@ -441,6 +441,7 @@ def create_power_ups(world: World, x_cord: int, y_cord: int) -> DesignerObject:
 
 
 def power_up_collision(world: World):
+    """ Checks if scientist touches power-up and gives the scientist abilities"""
     destroyed_power_up = []
     for power_up in world.power_ups:
         for index in world.power_up_index:
