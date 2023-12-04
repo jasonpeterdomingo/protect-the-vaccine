@@ -1,14 +1,32 @@
 # protect-the-vaccine
+## Author
 Jason Domingo: jayprdom@udel.edu
 
-## Pitch
-*Protect the Vaccine* is a game where the scientist has to protect the vaccine on the table
-from the zombies spawning from all 4 sides of the screen. If any of the zombies touch the scientist or the vaccine,
-the vaccine will be contaminated, thus, ending the game. The scientist will shoot their laser to kill the zombies. 
-There is a random chance the zombie will drop a special item when killed. Overtime, the zombies will scale 
-in difficulty: faster, stronger, and special abilities. When the timer runs out and all the zombies are dead, 
-the player wins.
+## Description
+*Protect the Vaccine* is a game where the scientist has to protect the vaccine from zombies.
 
+## About
+*Protect the Vaccine* is a game where the scientist has to protect the vaccine from the zombies 
+spawning from all 4 sides of the screen. If any of the zombies touch the scientist or the vaccine,
+the vaccine will be contaminated, thus, ending the game. The scientist will shoot their laser to kill the zombies. 
+There is a random chance the zombie will drop a power-up when killed. The apple increases the scientist's speed while
+the star increases the size of their lasers. Every 10 seconds, the zombies will scale in difficulty: 
+faster, stronger, and larger quantity. When the timer runs out, the player wins.
+
+## Instructions
+- <b>Moving:</b> The scientist can move up, down, left, and right by pressing "w", "s", "a", "d" respectively.
+- <b>Shooting:</b> Press the space bar
+- <b>Diagonal Shooting</b> Press "q", "e", "z", and "x" to shoot up-left, up-right, down-left, and down-right
+
+
+## Acknowledgements
+- https://designer-edu.github.io/designer/students/docs.html
+- https://designer-edu.github.io/designer/examples/examples.html
+- https://docs.python.org/3/library/math.html
+- https://www.w3schools.com/python/ref_string_format.asp
+
+
+## Tasks
 ### Phase 1
 #### YOUTUBE LINK: https://youtu.be/2cLohY3uw3Y
 - [x] <b>Create Game</b>: Create the square grid where the game takes place
