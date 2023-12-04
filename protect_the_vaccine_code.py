@@ -310,32 +310,45 @@ def destroy_laser_y(world: World):
     world.lasers = kept
 
 
-def create_zombie(x_cord: int, y_cord: int) -> Zombie:
+def create_zombie(x_cord: int, y_cord: int, speed: int, health: int) -> Zombie:
     """ Creates the zombie """
-    return Zombie("images/zombie.png", x_cord, y_cord, speed=1, direction=0, health=100)
+    return Zombie("images/zombie.png", x_cord, y_cord, speed=speed, direction=0, health=health)
 
 
 def spawn_zombies(world: World):
     """ Spawns a zombie randomly between 4 different spawn points """
+    speed = 1
+    health = 1
+    quantity = 5
+
+    if world.time_info.frame_count <= 600:
+        speed = 2
+        health = 200
+        quantity = 10
+    elif world.time_info.frame_count <= 300:
+        speed = 3
+        health = 300
+        quantity = 15
+
     spawn_point = randint(0, 250)
-    if len(world.zombies) < 5:
+    if len(world.zombies) < quantity:
         if spawn_point == 0:
-            new_zombie = create_zombie(randint(0, 800), get_height())
+            new_zombie = create_zombie(randint(0, 800), get_height(), speed, health)
             new_zombie.scale_x = .17
             new_zombie.scale_y = .17
             world.zombies.append(new_zombie)
         elif spawn_point == 1:
-            new_zombie = create_zombie(get_width(), randint(0, 600))
+            new_zombie = create_zombie(get_width(), randint(0, 600), speed, health)
             new_zombie.scale_x = .17
             new_zombie.scale_y = .17
             world.zombies.append(new_zombie)
         elif spawn_point == 2:
-            new_zombie = create_zombie(randint(0, 800), 0)
+            new_zombie = create_zombie(randint(0, 800), 0, speed, health)
             new_zombie.scale_x = .17
             new_zombie.scale_y = .17
             world.zombies.append(new_zombie)
         elif spawn_point == 3:
-            new_zombie = create_zombie(0, randint(0, 600))
+            new_zombie = create_zombie(0, randint(0, 600), speed, health)
             new_zombie.scale_x = .17
             new_zombie.scale_y = .17
             world.zombies.append(new_zombie)
@@ -439,7 +452,7 @@ def zombie_collision(world: World) -> bool:
 
 
 def difficulty_increase(world: World):
-    """ Increases zombie speed and health after 10 seconds """
+    """ Increases current zombies' speed and health after 10 seconds """
     for zombie in world.zombies:
         zombie.speed += 1
         zombie.health = 200
